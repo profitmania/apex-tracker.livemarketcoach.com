@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -32,17 +32,17 @@
         <div class="flex flex-wrap items-center gap-2.5">
             <!-- Tradovate Import Button -->
             <button onclick="openImportModal()" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 shadow-sm">
-                <i class="fa-solid fa-file-csv text-sm"></i> <span data-i18n="btnImport">Импорт Tradovate CSV</span>
+                <i class="fa-solid fa-file-csv text-sm"></i> <span data-i18n="btnImport">Import Tradovate CSV</span>
             </button>
             
             <!-- Export Backup Button -->
             <button onclick="exportData()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition cursor-pointer flex items-center gap-1.5">
-                <i class="fa-solid fa-download"></i> <span data-i18n="btnExport">Экспорт</span>
+                <i class="fa-solid fa-download"></i> <span data-i18n="btnExport">Export</span>
             </button>
 
-            <!-- Language Switcher -->
+            <!-- Language Switcher Button -->
             <button onclick="toggleLanguage()" id="langBtn" class="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
-                <i class="fa-solid fa-globe"></i> <span id="langBtnText">RU / EN</span>
+                <i class="fa-solid fa-globe"></i> <span id="langBtnText">EN / RU</span>
             </button>
 
             <!-- Reset Data -->
@@ -66,12 +66,12 @@
         <!-- Account Balance -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
             <div class="flex justify-between items-start text-slate-400 mb-2">
-                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblBalance">Баланс счёта</span>
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblBalance">Account Balance</span>
                 <i class="fa-solid fa-wallet text-slate-500"></i>
             </div>
             <div class="text-2xl font-bold text-white" id="statBalance">$50,000.00</div>
             <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
-                <i class="fa-solid fa-arrow-trend-up"></i> <span id="statTotalProfit">+$0.00</span> <span data-i18n="lblTotalProfit">общая прибыль</span>
+                <i class="fa-solid fa-arrow-trend-up"></i> <span id="statTotalProfit">+$0.00</span> <span data-i18n="lblTotalProfit">total profit</span>
             </div>
         </div>
 
@@ -82,17 +82,17 @@
                 <i class="fa-solid fa-shield-halved text-slate-500"></i>
             </div>
             <div class="text-2xl font-bold text-amber-400" id="statSafetyNetLeft">$2,600.00</div>
-            <div class="text-xs text-slate-400 mt-1" id="statSafetyNetSub" data-i18n="lblSafetyNetSub">Осталось до порога вывода</div>
+            <div class="text-xs text-slate-400 mt-1" id="statSafetyNetSub" data-i18n="lblSafetyNetSub">Left to Payout Threshold</div>
         </div>
 
         <!-- Trailing Drawdown Stop Limit -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
             <div class="flex justify-between items-start text-slate-400 mb-2">
-                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblTrailingStop">Порог ликвидации</span>
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblTrailingStop">Liquidation Level</span>
                 <i class="fa-solid fa-triangle-exclamation text-slate-500"></i>
             </div>
             <div class="text-2xl font-bold text-rose-400" id="statTrailingThreshold">$47,500.00</div>
-            <div class="text-xs text-slate-400 mt-1" id="statTrailingSub" data-i18n="lblTrailingSub">Остановка на $50,100</div>
+            <div class="text-xs text-slate-400 mt-1" id="statTrailingSub" data-i18n="lblTrailingSub">Stops at $50,100</div>
         </div>
 
         <!-- 50% Consistency Status -->
@@ -101,8 +101,8 @@
                 <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblConsistencyRule">Consistency Rule (50%)</span>
                 <i class="fa-solid fa-scale-balanced text-slate-500"></i>
             </div>
-            <div class="text-2xl font-bold text-emerald-400" id="statConsistencyStatus">Выполнено</div>
-            <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Лучший день &le; 50% прибыли</div>
+            <div class="text-2xl font-bold text-emerald-400" id="statConsistencyStatus">Passed</div>
+            <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Best day &le; 50% profit</div>
         </div>
     </div>
 
@@ -111,7 +111,7 @@
         <!-- Balance Trend Chart -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
             <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-area text-amber-400"></i> <span data-i18n="chartProfitTitle">Динамика баланса и порога просадки</span>
+                <i class="fa-solid fa-chart-area text-amber-400"></i> <span data-i18n="chartProfitTitle">Balance & Trailing Drawdown Trajectory</span>
             </h2>
             <div class="h-64 relative">
                 <canvas id="profitChart"></canvas>
@@ -121,7 +121,7 @@
         <!-- Consistency Chart -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
             <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-bar text-indigo-400"></i> <span data-i18n="chartConsistencyTitle">Распределение дневной прибыли (50% Rule)</span>
+                <i class="fa-solid fa-chart-bar text-indigo-400"></i> <span data-i18n="chartConsistencyTitle">Daily Profit Share vs 50% Limit</span>
             </h2>
             <div class="h-64 relative">
                 <canvas id="consistencyChart"></canvas>
@@ -136,24 +136,24 @@
             <div>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-pie-chart text-indigo-400"></i> <span data-i18n="consTitle">Анализ Apex 50% Consistency Rule</span>
+                        <i class="fa-solid fa-pie-chart text-indigo-400"></i> <span data-i18n="consTitle">Apex 50% Consistency Rule Analysis</span>
                     </h2>
-                    <span id="consistencyBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Выполнено</span>
+                    <span id="consistencyBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Passed</span>
                 </div>
                 <p class="text-xs text-slate-400 mb-6" data-i18n="consDesc">
-                    Правило Apex требует, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.
+                    Apex rules require that no single day accounts for more than 50% of your total net profit. Your total net profit must be at least double your best winning day to qualify for payout.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                     <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxTotalProfit">Чистая прибыль</div>
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxTotalProfit">Net Profit</div>
                         <div class="text-lg font-bold text-white" id="consTotalProfit">$0.00</div>
                     </div>
                     <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestDay">Самый прибыльный день</div>
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestDay">Best Trading Day</div>
                         <div class="text-lg font-bold text-emerald-400" id="consBestDay">$0.00</div>
                     </div>
                     <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
-                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestShare">Доля лучшего дня</div>
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestShare">Best Day Share</div>
                         <div class="text-lg font-bold text-indigo-400" id="consPercentage">0.0%</div>
                     </div>
                 </div>
@@ -162,8 +162,8 @@
             <!-- Progress Bar -->
             <div>
                 <div class="flex justify-between text-xs text-slate-400 mb-2">
-                    <span data-i18n="consLimitText">Лимит доли одного дня (Макс 50.0%)</span>
-                    <span id="consTargetText">Цель: 0.0% / 50.0%</span>
+                    <span data-i18n="consLimitText">Single Day Share Limit (Max 50.0%)</span>
+                    <span id="consTargetText">Target: 0.0% / 50.0%</span>
                 </div>
                 <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
                     <div id="consProgressBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
@@ -176,23 +176,23 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
             <div>
                 <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-calendar-plus text-amber-400"></i> <span data-i18n="formTitle">Добавить торговый день</span>
+                    <i class="fa-solid fa-calendar-plus text-amber-400"></i> <span data-i18n="formTitle">Add Trading Day</span>
                 </h2>
                 <form id="tradeForm" class="space-y-4">
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelDate">Дата</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelDate">Date</label>
                         <input type="date" id="tradeDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelResult">Результат дня ($)</label>
-                        <input type="number" step="0.01" id="tradeProfit" placeholder="Например, 350 или -120" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelResult">Day Result ($)</label>
+                        <input type="number" step="0.01" id="tradeProfit" placeholder="e.g. 350 or -120" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelNotes">Заметки / Инструмент</label>
-                        <input type="text" id="tradeNote" placeholder="Например, MNQ LMC Sweep" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelNotes">Notes / Instrument</label>
+                        <input type="text" id="tradeNote" placeholder="e.g. MNQ LMC Sweep" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
                     </div>
                     <button type="submit" id="addDayBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-amber-600/20 cursor-pointer">
-                        <i class="fa-solid fa-plus mr-1.5"></i> Добавить день
+                        <i class="fa-solid fa-plus mr-1.5"></i> Add Day
                     </button>
                 </form>
             </div>
@@ -206,21 +206,21 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:col-span-2">
             <div class="flex justify-between items-center mb-4">
                 <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                    <i class="fa-solid fa-list text-indigo-400"></i> <span data-i18n="historyTitle">История торговых дней</span>
+                    <i class="fa-solid fa-list text-indigo-400"></i> <span data-i18n="historyTitle">Trading Days History</span>
                 </h2>
-                <span class="text-xs text-slate-400" id="totalDaysCount">Всего дней: 0</span>
+                <span class="text-xs text-slate-400" id="totalDaysCount">Total days: 0</span>
             </div>
 
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
                     <thead>
                         <tr class="border-b border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
-                            <th class="pb-3 font-medium" data-i18n="thDate">Дата</th>
-                            <th class="pb-3 font-medium" data-i18n="thResult">Результат</th>
-                            <th class="pb-3 font-medium" data-i18n="thBalance">Баланс после</th>
-                            <th class="pb-3 font-medium" data-i18n="thQualify">Квалиф. (&ge;$50)</th>
-                            <th class="pb-3 font-medium" data-i18n="thNotes">Заметки</th>
-                            <th class="pb-3 font-medium text-right" data-i18n="thAction">Действие</th>
+                            <th class="pb-3 font-medium" data-i18n="thDate">Date</th>
+                            <th class="pb-3 font-medium" data-i18n="thResult">Result</th>
+                            <th class="pb-3 font-medium" data-i18n="thBalance">Balance After</th>
+                            <th class="pb-3 font-medium" data-i18n="thQualify">Qualify (&ge;$50)</th>
+                            <th class="pb-3 font-medium" data-i18n="thNotes">Notes</th>
+                            <th class="pb-3 font-medium text-right" data-i18n="thAction">Action</th>
                         </tr>
                     </thead>
                     <tbody id="tradeTableBody" class="divide-y divide-slate-800/60 text-sm">
@@ -228,7 +228,7 @@
                     </tbody>
                 </table>
                 <div id="emptyTableState" class="text-center py-8 text-slate-500 text-sm" data-i18n="emptyTable">
-                    Записей пока нет. Загрузите CSV-файл Tradovate или добавьте первый день вручную.
+                    No records yet. Import Tradovate CSV or add your first day above.
                 </div>
             </div>
         </div>
@@ -237,35 +237,35 @@
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
             <div>
                 <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
-                    <i class="fa-solid fa-money-bill-transfer text-amber-400"></i> <span data-i18n="payoutTitle">Первая выплата (First Payout)</span>
+                    <i class="fa-solid fa-money-bill-transfer text-amber-400"></i> <span data-i18n="payoutTitle">My First Payout (Apex)</span>
                 </h2>
 
                 <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl mb-4 space-y-2.5 text-xs">
                     <div class="flex justify-between">
-                        <span class="text-slate-400" data-i18n="payoutAvailableLabel">Доступно к выводу:</span>
+                        <span class="text-slate-400" data-i18n="payoutAvailableLabel">Available to Payout:</span>
                         <span class="font-bold text-white" id="payoutAvailable">$0.00</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400" data-i18n="payoutMaxLabel">Максимум (1-й вывод):</span>
+                        <span class="text-slate-400" data-i18n="payoutMaxLabel">Max (1st Payout):</span>
                         <span class="font-bold text-amber-400">$2,000.00</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400" data-i18n="payoutDaysLabel">Дни с прибылью &ge; $50:</span>
-                        <span class="font-bold text-amber-400" id="payoutDaysStatus">0 / 5 дней</span>
+                        <span class="text-slate-400" data-i18n="payoutDaysLabel">Days &ge; $50 Profit:</span>
+                        <span class="font-bold text-amber-400" id="payoutDaysStatus">0 / 5 days</span>
                     </div>
                     <div class="flex justify-between">
                         <span class="text-slate-400" data-i18n="payoutSafetyLabel">Safety Net Threshold:</span>
                         <span class="font-bold text-slate-300" id="payoutSafetyStatus">$52,600.00</span>
                     </div>
                     <div class="flex justify-between">
-                        <span class="text-slate-400" data-i18n="payoutShareLabel">Доля прибыли:</span>
-                        <span class="font-bold text-emerald-400" data-i18n="payoutShareVal">100% (до $25,000)</span>
+                        <span class="text-slate-400" data-i18n="payoutShareLabel">Reward Share:</span>
+                        <span class="font-bold text-emerald-400" data-i18n="payoutShareVal">100% (up to $25k)</span>
                     </div>
                 </div>
 
                 <div class="space-y-3">
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutMethodLabel">Способ вывода</label>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutMethodLabel">Payout Method</label>
                         <select id="payoutMethod" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
                             <option value="Plane / Rise">RiseWorks (Crypto / Bank)</option>
                             <option value="USDT (TRC20)">USDT (TRC20)</option>
@@ -273,17 +273,17 @@
                         </select>
                     </div>
                     <div>
-                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutWalletLabel">Реквизиты / Кошелек</label>
-                        <input type="text" id="payoutWallet" placeholder="Адрес кошелька или Email Rise" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutWalletLabel">Wallet Address / Rise Details</label>
+                        <input type="text" id="payoutWallet" placeholder="Wallet address or Rise Email" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
                     </div>
                 </div>
             </div>
 
             <div class="mt-6">
                 <button onclick="requestPayout()" id="payoutBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-amber-600/20 cursor-pointer">
-                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span data-i18n="payoutBtnText">Запросить выплату APEX</span>
+                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span data-i18n="payoutBtnText">Request Apex Payout</span>
                 </button>
-                <p class="text-[11px] text-slate-500 text-center mt-2" data-i18n="payoutFooter">Окна запроса Apex: 1–15 и 16–31 числа каждого месяца.</p>
+                <p class="text-[11px] text-slate-500 text-center mt-2" data-i18n="payoutFooter">Apex payout windows: 1st–15th and 16th–last day of the month.</p>
             </div>
         </div>
     </div>
@@ -294,7 +294,7 @@
     <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 shadow-2xl relative space-y-5">
         <div class="flex justify-between items-center border-b border-slate-800 pb-4">
             <h3 class="text-lg font-bold text-white flex items-center gap-2">
-                <i class="fa-solid fa-file-csv text-emerald-400"></i> <span data-i18n="modalImportTitle">Импорт файлов Tradovate (Performance.csv)</span>
+                <i class="fa-solid fa-file-csv text-emerald-400"></i> <span data-i18n="modalImportTitle">Import Tradovate CSV (Performance.csv)</span>
             </h3>
             <button onclick="closeImportModal()" class="text-slate-400 hover:text-white p-1 transition cursor-pointer">
                 <i class="fa-solid fa-xmark text-lg"></i>
@@ -304,27 +304,27 @@
         <!-- Drop Zone -->
         <div id="dropZone" onclick="document.getElementById('csvFileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 bg-slate-950/50 hover:bg-slate-950 p-6 rounded-xl text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
             <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-400/80"></i>
-            <p class="text-sm font-medium text-slate-200" data-i18n="dropText">Перетащите файл Performance.csv сюда или нажмите для выбора</p>
-            <p class="text-xs text-slate-500">Поддерживаются стандартные CSV-отчеты Tradovate</p>
+            <p class="text-sm font-medium text-slate-200" data-i18n="dropText">Drag & drop your Performance.csv file here, or click to browse</p>
+            <p class="text-xs text-slate-500" data-i18n="dropSub">Supports standard Tradovate Performance CSV reports</p>
             <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
         </div>
 
         <!-- Preview Results Area -->
         <div id="importPreview" class="hidden space-y-3">
             <div class="flex justify-between items-center text-xs text-slate-400">
-                <span>Распознано торговых дней: <strong id="previewDaysCount" class="text-white">0</strong></span>
-                <span>Всего сделок: <strong id="previewTradesCount" class="text-white">0</strong></span>
-                <span>Итоговый PnL: <strong id="previewTotalPnL" class="text-white">$0.00</strong></span>
+                <span><span data-i18n="lblParsedDays">Parsed Trading Days:</span> <strong id="previewDaysCount" class="text-white">0</strong></span>
+                <span><span data-i18n="lblParsedTrades">Total Trades:</span> <strong id="previewTradesCount" class="text-white">0</strong></span>
+                <span><span data-i18n="lblParsedPnL">Net PnL:</span> <strong id="previewTotalPnL" class="text-white">$0.00</strong></span>
             </div>
 
             <div class="max-h-48 overflow-y-auto border border-slate-800 rounded-xl bg-slate-950">
                 <table class="w-full text-left text-xs border-collapse">
                     <thead class="bg-slate-900 border-b border-slate-800 text-slate-400 sticky top-0">
                         <tr>
-                            <th class="p-2.5">Дата</th>
-                            <th class="p-2.5">Результат</th>
-                            <th class="p-2.5">Сделок</th>
-                            <th class="p-2.5">Инструменты</th>
+                            <th class="p-2.5" data-i18n="thDate">Date</th>
+                            <th class="p-2.5" data-i18n="thResult">Result</th>
+                            <th class="p-2.5" data-i18n="thTradesCount">Trades</th>
+                            <th class="p-2.5" data-i18n="thSymbols">Symbols</th>
                         </tr>
                     </thead>
                     <tbody id="previewTableBody" class="divide-y divide-slate-800/60">
@@ -335,26 +335,26 @@
 
             <!-- Import Mode Options -->
             <div class="space-y-2 pt-2">
-                <label class="block text-xs font-medium text-slate-400">Режим импорта:</label>
+                <label class="block text-xs font-medium text-slate-400" data-i18n="lblImportMode">Import Mode:</label>
                 <div class="grid grid-cols-2 gap-3 text-xs">
                     <label class="flex items-center gap-2 bg-slate-950 p-2.5 border border-slate-800 rounded-xl cursor-pointer">
                         <input type="radio" name="importOption" value="merge" checked class="text-emerald-500 focus:ring-0">
-                        <span class="text-slate-200">Обновить / Дополнить</span>
+                        <span class="text-slate-200" data-i18n="optMerge">Update / Merge</span>
                     </label>
                     <label class="flex items-center gap-2 bg-slate-950 p-2.5 border border-slate-800 rounded-xl cursor-pointer">
                         <input type="radio" name="importOption" value="overwrite" class="text-emerald-500 focus:ring-0">
-                        <span class="text-rose-400">Заменить всю историю</span>
+                        <span class="text-rose-400" data-i18n="optOverwrite">Overwrite History</span>
                     </label>
                 </div>
             </div>
         </div>
 
         <div class="flex justify-end gap-3 border-t border-slate-800 pt-4">
-            <button onclick="closeImportModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium cursor-pointer transition">
-                Отмена
+            <button onclick="closeImportModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium cursor-pointer transition" data-i18n="btnCancel">
+                Cancel
             </button>
-            <button id="applyImportBtn" onclick="applyImportedData()" disabled class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold cursor-pointer transition">
-                Применить к трекеру
+            <button id="applyImportBtn" onclick="applyImportedData()" disabled class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold cursor-pointer transition" data-i18n="btnApply">
+                Apply to Tracker
             </button>
         </div>
     </div>
@@ -362,12 +362,12 @@
 
 <!-- Footer -->
 <footer class="bg-slate-900 border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
-    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex Trader Funding 2026.</p>
+    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 2026 Rules.</p>
 </footer>
 
 <!-- JavaScript Application Logic, CSV Parser & Charts -->
 <script>
-let currentLang = localStorage.getItem('apex_lang') || 'ru';
+let currentLang = localStorage.getItem('apex_lang') || 'en';
 let trades = JSON.parse(localStorage.getItem('apex_50k_trades')) || [];
 let parsedImportDays = [];
 
@@ -376,10 +376,10 @@ let consistencyChartInstance = null;
 
 const translations = {
     en: {
-        langBtnText: "RU / EN",
+        langBtnText: "EN / RU",
         resetBtn: '<i class="fa-solid fa-rotate-right"></i>',
         btnImport: "Import Tradovate CSV",
-        btnExport: "Export Data",
+        btnExport: "Export",
         statusActiveText: "PA Active",
         lblBalance: "Account Balance",
         lblTotalProfit: "total profit",
@@ -387,7 +387,7 @@ const translations = {
         lblSafetyNetSub: "Left to Payout Threshold",
         lblTrailingStop: "Liquidation Level",
         lblTrailingSub: "Stops at $50,100",
-        lblConsistencyRule: "50% Consistency Rule",
+        lblConsistencyRule: "Consistency Rule (50%)",
         lblConsistencySub: "Best day &le; 50% profit",
         chartProfitTitle: "Balance & Trailing Drawdown Trajectory",
         chartConsistencyTitle: "Daily Profit Share vs 50% Limit",
@@ -421,9 +421,20 @@ const translations = {
         payoutWalletLabel: "Wallet Address / Rise Details",
         payoutBtnText: "Request Apex Payout",
         payoutFooter: "Apex payout windows: 1st–15th and 16th–last day of the month.",
-        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Built for Apex Trader Funding 2026 Rules.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 2026 Rules.",
         modalImportTitle: "Import Tradovate CSV (Performance.csv)",
         dropText: "Drag & drop your Performance.csv file here, or click to browse",
+        dropSub: "Supports standard Tradovate Performance CSV reports",
+        lblParsedDays: "Parsed Trading Days:",
+        lblParsedTrades: "Total Trades:",
+        lblParsedPnL: "Net PnL:",
+        thTradesCount: "Trades",
+        thSymbols: "Symbols",
+        lblImportMode: "Import Mode:",
+        optMerge: "Update / Merge",
+        optOverwrite: "Overwrite History",
+        btnCancel: "Cancel",
+        btnApply: "Apply to Tracker",
         statusPassed: "Passed",
         statusViolation: "50% Exceeded",
         statusWaiting: "Waiting",
@@ -441,7 +452,7 @@ const translations = {
         targetText: (perc) => `Target: ${perc}% / 50.0%`
     },
     ru: {
-        langBtnText: "EN / RU",
+        langBtnText: "RU / EN",
         resetBtn: '<i class="fa-solid fa-rotate-right"></i>',
         btnImport: "Импорт Tradovate CSV",
         btnExport: "Экспорт",
@@ -489,6 +500,17 @@ const translations = {
         footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex Trader Funding 2026.",
         modalImportTitle: "Импорт файлов Tradovate (Performance.csv)",
         dropText: "Перетащите файл Performance.csv сюда или нажмите для выбора",
+        dropSub: "Поддерживаются стандартные CSV-отчеты Tradovate",
+        lblParsedDays: "Распознано дней:",
+        lblParsedTrades: "Всего сделок:",
+        lblParsedPnL: "Итоговый PnL:",
+        thTradesCount: "Сделок",
+        thSymbols: "Инструменты",
+        lblImportMode: "Режим импорта:",
+        optMerge: "Обновить / Дополнить",
+        optOverwrite: "Заменить всю историю",
+        btnCancel: "Отмена",
+        btnApply: "Применить к трекеру",
         statusPassed: "Выполнено",
         statusViolation: "Превышение 50%",
         statusWaiting: "Ожидание",
@@ -523,7 +545,7 @@ function updateTexts() {
     document.getElementById('resetBtn').innerHTML = t.resetBtn;
     document.getElementById('addDayBtn').innerHTML = t.addDayBtn;
     document.getElementById('payoutBtn').innerHTML = t.payoutBtnText;
-    document.getElementById('langBtnText').textContent = currentLang === 'en' ? 'RU / EN' : 'EN / RU';
+    document.getElementById('langBtnText').textContent = currentLang === 'en' ? 'EN / RU' : 'RU / EN';
 }
 
 document.getElementById('tradeDate').valueAsDate = new Date();
@@ -575,7 +597,6 @@ function closeImportModal() {
     document.getElementById('importModal').classList.add('hidden');
 }
 
-// Setup Drag & Drop handlers
 const dropZone = document.getElementById('dropZone');
 ['dragenter', 'dragover'].forEach(eventName => {
     dropZone.addEventListener(eventName, (e) => {
@@ -610,7 +631,6 @@ function parseTradovateCSV(csvText) {
     const lines = csvText.split(/\r\n|\n/);
     if (lines.length < 2) return;
 
-    // Helper to safely split CSV line taking quotes into account
     const parseLine = (text) => {
         const result = [];
         let cur = '';
@@ -627,15 +647,13 @@ function parseTradovateCSV(csvText) {
 
     const headers = parseLine(lines[0]).map(h => h.toLowerCase());
 
-    // Locate PnL index
     let pnlIdx = headers.findIndex(h => h === 'pnl' || h === 'realizedpnl' || h === 'realized pnl' || h === 'profit');
-    // Locate Timestamp/Date index (prefer soldTimestamp for closed positions)
     let dateIdx = headers.findIndex(h => h === 'soldtimestamp');
     if (dateIdx === -1) dateIdx = headers.findIndex(h => h.includes('timestamp') || h.includes('date'));
     let symbolIdx = headers.findIndex(h => h === 'symbol');
 
     if (pnlIdx === -1 || dateIdx === -1) {
-        alert("Не удалось распознать формат Tradovate CSV. Убедитесь, что загружаете оригинальный Performance.csv");
+        alert("Failed to parse Tradovate CSV format. Please make sure you are uploading the original Performance.csv");
         return;
     }
 
@@ -650,7 +668,6 @@ function parseTradovateCSV(csvText) {
         let rawDate = cols[dateIdx];
         let symbol = symbolIdx !== -1 ? cols[symbolIdx] : 'Tradovate';
 
-        // Parse PnL: "$37.50" or "$(124.00)" or "-$124.00"
         let pnlVal = 0;
         if (rawPnL.startsWith('$(') && rawPnL.endsWith(')')) {
             pnlVal = -parseFloat(rawPnL.substring(2, rawPnL.length - 1).replace(/,/g, ''));
@@ -660,7 +677,6 @@ function parseTradovateCSV(csvText) {
             pnlVal = parseFloat(rawPnL.replace(/,/g, '')) || 0;
         }
 
-        // Parse Date: "11/03/2026 07:23:26" -> YYYY-MM-DD
         let dtPart = rawDate.split(' ')[0];
         let formattedDate = dtPart;
         if (dtPart.includes('/')) {
@@ -746,7 +762,6 @@ function applyImportedData() {
             note: d.note
         }));
     } else {
-        // Merge mode: overwrite existing dates or push new ones
         parsedImportDays.forEach(imp => {
             const existingIdx = trades.findIndex(t => t.date === imp.date);
             if (existingIdx !== -1) {
@@ -810,7 +825,6 @@ function renderDashboard() {
             peakBalance = currentBalance;
         }
 
-        // Apex Trailing Drawdown calculation (stops trailing at $50,100)
         let calcTrailing = peakBalance - 2500;
         trailingThreshold = Math.min(50100, Math.max(47500, calcTrailing));
 
@@ -908,7 +922,7 @@ function renderDashboard() {
     document.getElementById('totalDaysCount').textContent = t.totalDaysText(trades.length);
 
     const payoutDaysStatus = document.getElementById('payoutDaysStatus');
-    payoutDaysStatus.textContent = `${qualifyingDaysCount} / 5 дней`;
+    payoutDaysStatus.textContent = `${qualifyingDaysCount} / 5 ${currentLang === 'en' ? 'days' : 'дней'}`;
     payoutDaysStatus.className = qualifyingDaysCount >= 5 ? "font-bold text-emerald-400" : "font-bold text-amber-400";
 
     // Render Charts
