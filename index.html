@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Apex Legacy 50K - Trading & Payout Tracker</title>
+    <!-- Tailwind CSS v4 CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="bg-slate-950 text-slate-100 font-sans antialiased min-h-screen flex flex-col justify-between">
+
+<!-- Header -->
+<header class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+        <div class="flex items-center gap-3">
+            <div class="bg-amber-500/10 border border-amber-500/30 p-2.5 rounded-xl text-amber-400">
+                <i class="fa-solid fa-chart-line text-xl"></i>
+            </div>
+            <div>
+                <h1 class="text-xl font-bold tracking-tight text-white flex items-center gap-2">
+                    Apex Legacy 50K Tracker
+                    <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md font-normal">PA Account</span>
+                </h1>
+                <p class="text-xs text-slate-400">Live Market Coach • Tradovate PA • 100% First $25k Payout</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleLanguage()" id="langBtn" class="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
+                <i class="fa-solid fa-globe"></i> <span id="langBtnText">RU / EN</span>
+            </button>
+            <button onclick="resetData()" id="resetBtn" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-xs font-medium transition cursor-pointer">
+                <i class="fa-solid fa-rotate-right mr-1.5"></i> Сбросить данные
+            </button>
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span id="statusActiveText">Счёт Активен</span>
+            </div>
+        </div>
+    </div>
+</header>
+
+<!-- Main Content -->
+<main class="max-w-7xl mx-auto px-4 py-6 w-full space-y-6">
+
+    <!-- Top Metrics Cards -->
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Account Balance -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="flex justify-between items-start text-slate-400 mb-2">
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblBalance">Баланс счёта</span>
+                <i class="fa-solid fa-wallet text-slate-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-white" id="statBalance">$50,000.00</div>
+            <div class="text-xs text-emerald-400 mt-1 flex items-center gap-1">
+                <i class="fa-solid fa-arrow-trend-up"></i> <span id="statTotalProfit">+$0.00</span> <span data-i18n="lblTotalProfit">общая прибыль</span>
+            </div>
+        </div>
+
+        <!-- Safety Net Threshold -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="flex justify-between items-start text-slate-400 mb-2">
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblSafetyNet">Safety Net (Мин. $52,600)</span>
+                <i class="fa-solid fa-shield-halved text-slate-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-amber-400" id="statSafetyNetLeft">$2,600.00</div>
+            <div class="text-xs text-slate-400 mt-1" id="statSafetyNetSub" data-i18n="lblSafetyNetSub">Осталось до порога вывода</div>
+        </div>
+
+        <!-- Trailing Drawdown Stop Limit -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="flex justify-between items-start text-slate-400 mb-2">
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblTrailingStop">Порог ликвидации</span>
+                <i class="fa-solid fa-triangle-exclamation text-slate-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-rose-400" id="statTrailingThreshold">$47,500.00</div>
+            <div class="text-xs text-slate-400 mt-1" id="statTrailingSub" data-i18n="lblTrailingSub">Остановка на $50,100</div>
+        </div>
+
+        <!-- 50% Consistency Status -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
+            <div class="flex justify-between items-start text-slate-400 mb-2">
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblConsistencyRule">Consistency Rule (50%)</span>
+                <i class="fa-solid fa-scale-balanced text-slate-500"></i>
+            </div>
+            <div class="text-2xl font-bold text-emerald-400" id="statConsistencyStatus">Выполнено</div>
+            <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Лучший день &le; 50% прибыли</div>
+        </div>
+    </div>
+
+    <!-- Charts Section -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        <!-- Balance Trend Chart -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-area text-amber-400"></i> <span data-i18n="chartProfitTitle">Динамика баланса и порога просадки</span>
+            </h2>
+            <div class="h-64 relative">
+                <canvas id="profitChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Consistency Chart -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
+            <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
+                <i class="fa-solid fa-chart-bar text-indigo-400"></i> <span data-i18n="chartConsistencyTitle">Распределение дневной прибыли (50% Rule)</span>
+            </h2>
+            <div class="h-64 relative">
+                <canvas id="consistencyChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Middle Section: Consistency Progress & Form -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Consistency Rule Breakdown -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
+            <div>
+                <div class="flex justify-between items-center mb-4">
+                    <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                        <i class="fa-solid fa-pie-chart text-indigo-400"></i> <span data-i18n="consTitle">Анализ Apex 50% Consistency Rule</span>
+                    </h2>
+                    <span id="consistencyBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Выполнено</span>
+                </div>
+                <p class="text-xs text-slate-400 mb-6" data-i18n="consDesc">
+                    Правило Apex требуют, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
+                    <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxTotalProfit">Чистая прибыль</div>
+                        <div class="text-lg font-bold text-white" id="consTotalProfit">$0.00</div>
+                    </div>
+                    <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestDay">Самый прибыльный день</div>
+                        <div class="text-lg font-bold text-emerald-400" id="consBestDay">$0.00</div>
+                    </div>
+                    <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
+                        <div class="text-xs text-slate-400 mb-1" data-i18n="boxBestShare">Доля лучшего дня</div>
+                        <div class="text-lg font-bold text-indigo-400" id="consPercentage">0.0%</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Progress Bar -->
+            <div>
+                <div class="flex justify-between text-xs text-slate-400 mb-2">
+                    <span data-i18n="consLimitText">Лимит доли одного дня (Макс 50.0%)</span>
+                    <span id="consTargetText">Цель: 0.0% / 50.0%</span>
+                </div>
+                <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
+                    <div id="consProgressBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+                </div>
+                <p id="consWarningMessage" class="text-xs text-slate-400 mt-2 hidden"></p>
+            </div>
+        </div>
+
+        <!-- Add Trading Day Form -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-calendar-plus text-amber-400"></i> <span data-i18n="formTitle">Добавить торговый день</span>
+                </h2>
+                <form id="tradeForm" class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelDate">Дата</label>
+                        <input type="date" id="tradeDate" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelResult">Результат дня ($)</label>
+                        <input type="number" step="0.01" id="tradeProfit" placeholder="Например, 350 или -120" required class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="labelNotes">Заметки / Инструмент</label>
+                        <input type="text" id="tradeNote" placeholder="Например, MNQ LMC Sweep" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                    <button type="submit" id="addDayBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-amber-600/20 cursor-pointer">
+                        <i class="fa-solid fa-plus mr-1.5"></i> Добавить день
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bottom Section: History & Payout Options -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+
+        <!-- Trade History Table -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:col-span-2">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-list text-indigo-400"></i> <span data-i18n="historyTitle">История торговых дней</span>
+                </h2>
+                <span class="text-xs text-slate-400" id="totalDaysCount">Всего дней: 0</span>
+            </div>
+
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="border-b border-slate-800 text-xs text-slate-400 uppercase tracking-wider">
+                            <th class="pb-3 font-medium" data-i18n="thDate">Дата</th>
+                            <th class="pb-3 font-medium" data-i18n="thResult">Результат</th>
+                            <th class="pb-3 font-medium" data-i18n="thBalance">Баланс после</th>
+                            <th class="pb-3 font-medium" data-i18n="thQualify">Квалиф. (&ge;$50)</th>
+                            <th class="pb-3 font-medium" data-i18n="thNotes">Заметки</th>
+                            <th class="pb-3 font-medium text-right" data-i18n="thAction">Действие</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tradeTableBody" class="divide-y divide-slate-800/60 text-sm">
+                        <!-- Populated via JS -->
+                    </tbody>
+                </table>
+                <div id="emptyTableState" class="text-center py-8 text-slate-500 text-sm" data-i18n="emptyTable">
+                    Записей пока нет. Добавьте первый день торговой сессии выше.
+                </div>
+            </div>
+        </div>
+
+        <!-- Withdrawal Panel -->
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between">
+            <div>
+                <h2 class="text-lg font-semibold text-white mb-4 flex items-center gap-2">
+                    <i class="fa-solid fa-money-bill-transfer text-amber-400"></i> <span data-i18n="payoutTitle">Первая выплата (First Payout)</span>
+                </h2>
+
+                <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl mb-4 space-y-2.5 text-xs">
+                    <div class="flex justify-between">
+                        <span class="text-slate-400" data-i18n="payoutAvailableLabel">Доступно к выводу:</span>
+                        <span class="font-bold text-white" id="payoutAvailable">$0.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400" data-i18n="payoutMaxLabel">Максимум (1-й вывод):</span>
+                        <span class="font-bold text-amber-400">$2,000.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400" data-i18n="payoutDaysLabel">Дни с прибылью &ge; $50:</span>
+                        <span class="font-bold text-amber-400" id="payoutDaysStatus">0 / 5 дней</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400" data-i18n="payoutSafetyLabel">Safety Net Threshold:</span>
+                        <span class="font-bold text-slate-300" id="payoutSafetyStatus">$52,600.00</span>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-slate-400" data-i18n="payoutShareLabel">Доля прибыли:</span>
+                        <span class="font-bold text-emerald-400" data-i18n="payoutShareVal">100% (до $25,000)</span>
+                    </div>
+                </div>
+
+                <div class="space-y-3">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutMethodLabel">Способ вывода</label>
+                        <select id="payoutMethod" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                            <option value="Plane / Rise">RiseWorks (Crypto / Bank)</option>
+                            <option value="USDT (TRC20)">USDT (TRC20)</option>
+                            <option value="Direct Bank Wire">Bank Wire</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs font-medium text-slate-400 mb-1" data-i18n="payoutWalletLabel">Реквизиты / Кошелек</label>
+                        <input type="text" id="payoutWallet" placeholder="Адрес кошелька или Email Rise" class="w-full bg-slate-950 border border-slate-800 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-amber-500 transition">
+                    </div>
+                </div>
+            </div>
+
+            <div class="mt-6">
+                <button onclick="requestPayout()" id="payoutBtn" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-medium py-2.5 rounded-xl text-sm transition shadow-lg shadow-amber-600/20 cursor-pointer">
+                    <i class="fa-solid fa-paper-plane mr-1.5"></i> <span data-i18n="payoutBtnText">Запросить выплату APEX</span>
+                </button>
+                <p class="text-[11px] text-slate-500 text-center mt-2" data-i18n="payoutFooter">Окна запроса Apex: 1–15 и 16–31 числа каждого месяца.</p>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Footer -->
+<footer class="bg-slate-900 border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
+    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Настроено под правила Apex Trader Funding 2026.</p>
+</footer>
+
+<!-- JavaScript Application Logic & Charts -->
+<script>
+let currentLang = localStorage.getItem('apex_lang') || 'ru';
+let trades = JSON.parse(localStorage.getItem('apex_50k_trades')) || [];
+
+let profitChartInstance = null;
+let consistencyChartInstance = null;
+
+const translations = {
+    en: {
+        langBtnText: "RU / EN",
+        resetBtn: '<i class="fa-solid fa-rotate-right mr-1.5"></i> Reset Data',
+        statusActiveText: "Account Active",
+        lblBalance: "Account Balance",
+        lblTotalProfit: "total profit",
+        lblSafetyNet: "Safety Net ($52,600)",
+        lblSafetyNetSub: "Left to Payout Threshold",
+        lblTrailingStop: "Liquidation Level",
+        lblTrailingSub: "Stops at $50,100",
+        lblConsistencyRule: "50% Consistency Rule",
+        lblConsistencySub: "Best day &le; 50% profit",
+        chartProfitTitle: "Balance & Trailing Drawdown Trajectory",
+        chartConsistencyTitle: "Daily Profit Share vs 50% Limit",
+        consTitle: "Apex 50% Consistency Rule Analysis",
+        consDesc: "Apex rules require that no single day accounts for more than 50% of your total net profit. Your total net profit must be at least double your best winning day to qualify for payout.",
+        boxTotalProfit: "Net Profit",
+        boxBestDay: "Best Trading Day",
+        boxBestShare: "Best Day Share",
+        consLimitText: "Single Day Share Limit (Max 50.0%)",
+        formTitle: "Add Trading Day",
+        labelDate: "Date",
+        labelResult: "Day Result ($)",
+        labelNotes: "Notes / Instrument",
+        addDayBtn: '<i class="fa-solid fa-plus mr-1.5"></i> Add Day',
+        historyTitle: "Trading Days History",
+        thDate: "Date",
+        thResult: "Result",
+        thBalance: "Balance After",
+        thQualify: "Qualify (&ge;$50)",
+        thNotes: "Notes",
+        thAction: "Action",
+        emptyTable: "No records yet. Add your first trading day above.",
+        payoutTitle: "My First Payout (Apex)",
+        payoutAvailableLabel: "Available to Payout:",
+        payoutMaxLabel: "Max (1st Payout):",
+        payoutDaysLabel: "Days &ge; $50 Profit:",
+        payoutSafetyLabel: "Safety Net Threshold:",
+        payoutShareLabel: "Reward Share:",
+        payoutShareVal: "100% (up to $25k)",
+        payoutMethodLabel: "Payout Method",
+        payoutWalletLabel: "Wallet Address / Rise Details",
+        payoutBtnText: "Request Apex Payout",
+        payoutFooter: "Apex payout windows: 1st–15th and 16th–last day of the month.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Built for Apex Trader Funding 2026 Rules.",
+        statusPassed: "Passed",
+        statusViolation: "50% Exceeded",
+        statusWaiting: "Waiting",
+        badgePassed: "Passed",
+        badgeViolation: "Exceeded",
+        badgeWaiting: "Waiting",
+        confirmReset: "Are you sure you want to reset all trading history?",
+        alertNotEnoughDays: "You need at least 5 trading days with a profit of $50+ to request a payout.",
+        alertSafetyNetNotReached: "Account balance must reach at least $52,600 (Safety Net) to request a payout.",
+        alertConsistencyFailed: "Your best trading day exceeds 50% of your total profit. Earn more on other days to pass consistency.",
+        alertNoWallet: "Please enter your payment details or crypto address.",
+        alertSuccessPayout: (amt, method, wallet) => `Payout request of $${amt} via ${method} submitted to Apex Trader Funding!\nDetails: ${wallet}`,
+        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Your best day ($${best}) exceeds 50%. You need to earn an additional <span class="text-white font-bold">$${needed}</span> on other days to meet consistency.`,
+        totalDaysText: (count) => `Total days: ${count}`,
+        targetText: (perc) => `Target: ${perc}% / 50.0%`
+    },
+    ru: {
+        langBtnText: "EN / RU",
+        resetBtn: '<i class="fa-solid fa-rotate-right mr-1.5"></i> Сбросить данные',
+        statusActiveText: "Счёт Активен",
+        lblBalance: "Баланс счёта",
+        lblTotalProfit: "общая прибыль",
+        lblSafetyNet: "Safety Net ($52,600)",
+        lblSafetyNetSub: "Осталось до порога вывода",
+        lblTrailingStop: "Порог ликвидации",
+        lblTrailingSub: "Остановка на $50,100",
+        lblConsistencyRule: "Consistency Rule (50%)",
+        lblConsistencySub: "Лучший день &le; 50% прибыли",
+        chartProfitTitle: "Динамика баланса и порога просадки",
+        chartConsistencyTitle: "Распределение дневной прибыли (50% Rule)",
+        consTitle: "Анализ Apex 50% Consistency Rule",
+        consDesc: "Правило Apex требует, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.",
+        boxTotalProfit: "Чистая прибыль",
+        boxBestDay: "Самый прибыльный день",
+        boxBestShare: "Доля лучшего дня",
+        consLimitText: "Лимит доли одного дня (Макс 50.0%)",
+        formTitle: "Добавить торговый день",
+        labelDate: "Дата",
+        labelResult: "Результат дня ($)",
+        labelNotes: "Заметки / Инструмент",
+        addDayBtn: '<i class="fa-solid fa-plus mr-1.5"></i> Добавить день',
+        historyTitle: "История торговых дней",
+        thDate: "Дата",
+        thResult: "Результат",
+        thBalance: "Баланс после",
+        thQualify: "Квалиф. (&ge;$50)",
+        thNotes: "Заметки",
+        thAction: "Действие",
+        emptyTable: "Записей пока нет. Добавьте первый день торговой сессии выше.",
+        payoutTitle: "Первая выплата (First Payout)",
+        payoutAvailableLabel: "Доступно к выводу:",
+        payoutMaxLabel: "Максимум (1-й вывод):",
+        payoutDaysLabel: "Дни с прибылью &ge; $50:",
+        payoutSafetyLabel: "Safety Net Threshold:",
+        payoutShareLabel: "Доля прибыли:",
+        payoutShareVal: "100% (до $25,000)",
+        payoutMethodLabel: "Способ вывода",
+        payoutWalletLabel: "Реквизиты / Кошелек",
+        payoutBtnText: "Запросить выплату APEX",
+        payoutFooter: "Окна запроса Apex: 1–15 и 16–31 числа каждого месяца.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Настроено под правила Apex Trader Funding 2026.",
+        statusPassed: "Выполнено",
+        statusViolation: "Превышение 50%",
+        statusWaiting: "Ожидание",
+        badgePassed: "Выполнено",
+        badgeViolation: "Превышение",
+        badgeWaiting: "Ожидание",
+        confirmReset: "Вы уверены, что хотите сбросить всю историю торгов?",
+        alertNotEnoughDays: "Вам необходимо минимум 5 торговых дней с прибылью не менее $50 для первого вывода.",
+        alertSafetyNetNotReached: "Баланс аккаунта должен достичь $52,600 (Safety Net), чтобы запросить вывод.",
+        alertConsistencyFailed: "Ваш лучший торговый день превышает 50% общей прибыли. Заработайте еще в другие дни.",
+        alertNoWallet: "Пожалуйста, укажите реквизиты кошелька или Rise.",
+        alertSuccessPayout: (amt, method, wallet) => `Запрос на выплату $${amt} через ${method} успешно отправлен в Apex!\nРеквизиты: ${wallet}`,
+        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Ваш лучший день ($${best}) превышает 50%. Нужно заработать еще <span class="text-white font-bold">$${needed}</span> в другие дни для соблюдения консистентности.`,
+        totalDaysText: (count) => `Всего дней: ${count}`,
+        targetText: (perc) => `Цель: ${perc}% / 50.0%`
+    }
+};
+
+function toggleLanguage() {
+    currentLang = currentLang === 'en' ? 'ru' : 'en';
+    localStorage.setItem('apex_lang', currentLang);
+    updateTexts();
+    renderDashboard();
+}
+
+function updateTexts() {
+    const t = translations[currentLang];
+    document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (t[key]) el.textContent = t[key];
+    });
+    document.getElementById('resetBtn').innerHTML = t.resetBtn;
+    document.getElementById('addDayBtn').innerHTML = t.addDayBtn;
+    document.getElementById('payoutBtn').innerHTML = t.payoutBtnText;
+    document.getElementById('langBtnText').textContent = currentLang === 'en' ? 'RU / EN' : 'EN / RU';
+}
+
+document.getElementById('tradeDate').valueAsDate = new Date();
+
+const form = document.getElementById('tradeForm');
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const date = document.getElementById('tradeDate').value;
+    const profit = parseFloat(document.getElementById('tradeProfit').value);
+    const note = document.getElementById('tradeNote').value;
+    if (!date || isNaN(profit)) return;
+
+    trades.push({ id: Date.now(), date, profit, note });
+    trades.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+    saveAndRender();
+    form.reset();
+    document.getElementById('tradeDate').valueAsDate = new Date();
+});
+
+function deleteTrade(id) {
+    trades = trades.filter(t => t.id !== id);
+    saveAndRender();
+}
+
+function resetData() {
+    const t = translations[currentLang];
+    if (confirm(t.confirmReset)) {
+        trades = [];
+        saveAndRender();
+    }
+}
+
+function saveAndRender() {
+    localStorage.setItem('apex_50k_trades', JSON.stringify(trades));
+    renderDashboard();
+}
+
+function renderDashboard() {
+    const t = translations[currentLang];
+    const tableBody = document.getElementById('tradeTableBody');
+    const emptyState = document.getElementById('emptyTableState');
+    tableBody.innerHTML = '';
+
+    let netProfit = trades.reduce((acc, curr) => acc + curr.profit, 0);
+    let bestDay = trades.reduce((max, curr) => curr.profit > max ? curr.profit : max, 0);
+    let qualifyingDaysCount = trades.filter(t => t.profit >= 50).length;
+
+    if (trades.length === 0) {
+        emptyState.classList.remove('hidden');
+    } else {
+        emptyState.classList.add('hidden');
+    }
+
+    // Process balance and trailing threshold calculations
+    let currentBalance = 50000;
+    let peakBalance = 50000;
+    let trailingThreshold = 47500;
+    
+    let chartLabels = ['Start'];
+    let chartBalanceData = [50000];
+    let chartTrailingData = [47500];
+    let chartDailyProfits = [0];
+
+    trades.forEach(tr => {
+        currentBalance += tr.profit;
+        if (currentBalance > peakBalance) {
+            peakBalance = currentBalance;
+        }
+
+        // Apex Trailing Drawdown calculation (stops trailing at $50,100)
+        let calcTrailing = peakBalance - 2500;
+        trailingThreshold = Math.min(50100, Math.max(47500, calcTrailing));
+
+        chartLabels.push(tr.date);
+        chartBalanceData.push(currentBalance);
+        chartTrailingData.push(trailingThreshold);
+        chartDailyProfits.push(tr.profit);
+
+        const isProfit = tr.profit >= 0;
+        const isQualify = tr.profit >= 50;
+
+        const row = document.createElement('tr');
+        row.className = "hover:bg-slate-900/50 transition";
+        row.innerHTML = `
+            <td class="py-3 pr-4 text-slate-300">${tr.date}</td>
+            <td class="py-3 pr-4 font-semibold ${isProfit ? 'text-emerald-400' : 'text-rose-400'}">
+                ${isProfit ? '+' : ''}$${tr.profit.toFixed(2)}
+            </td>
+            <td class="py-3 pr-4 text-white font-medium">$${currentBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}</td>
+            <td class="py-3 pr-4">
+                ${isQualify 
+                    ? '<span class="text-xs px-2 py-0.5 bg-emerald-500/10 text-emerald-400 border border-emerald-500/20 rounded-md">Yes (+$50)</span>' 
+                    : '<span class="text-xs px-2 py-0.5 bg-slate-800 text-slate-400 rounded-md">No</span>'}
+            </td>
+            <td class="py-3 pr-4 text-slate-400 text-xs">${tr.note || '—'}</td>
+            <td class="py-3 text-right">
+                <button onclick="deleteTrade(${tr.id})" class="text-slate-500 hover:text-rose-400 transition cursor-pointer p-1">
+                    <i class="fa-solid fa-trash-can text-xs"></i>
+                </button>
+            </td>
+        `;
+        tableBody.appendChild(row);
+    });
+
+    // Top Cards Update
+    document.getElementById('statBalance').textContent = `$${currentBalance.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    
+    const profitEl = document.getElementById('statTotalProfit');
+    profitEl.textContent = `${netProfit >= 0 ? '+' : ''}$${netProfit.toFixed(2)}`;
+    profitEl.className = netProfit >= 0 ? "text-xs text-emerald-400 mt-1 flex items-center gap-1" : "text-xs text-rose-400 mt-1 flex items-center gap-1";
+
+    let distanceToSafetyNet = Math.max(0, 52600 - currentBalance);
+    document.getElementById('statSafetyNetLeft').textContent = `$${distanceToSafetyNet.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    document.getElementById('statSafetyNetLeft').className = distanceToSafetyNet === 0 ? "text-2xl font-bold text-emerald-400" : "text-2xl font-bold text-amber-400";
+
+    document.getElementById('statTrailingThreshold').textContent = `$${trailingThreshold.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+
+    // 50% Consistency Calculation
+    let consistencyPercentage = netProfit > 0 ? (bestDay / netProfit) * 100 : 0;
+    if (netProfit <= 0) consistencyPercentage = 0;
+
+    document.getElementById('consTotalProfit').textContent = `$${netProfit.toFixed(2)}`;
+    document.getElementById('consBestDay').textContent = `$${bestDay.toFixed(2)}`;
+    document.getElementById('consPercentage').textContent = `${consistencyPercentage.toFixed(1)}%`;
+    document.getElementById('consTargetText').textContent = t.targetText(consistencyPercentage.toFixed(1));
+
+    const progressBar = document.getElementById('consProgressBar');
+    const progressWidth = Math.min(consistencyPercentage * 2, 100);
+    progressBar.style.width = `${progressWidth}%`;
+
+    const badge = document.getElementById('consistencyBadge');
+    const statusText = document.getElementById('statConsistencyStatus');
+    const warningMsg = document.getElementById('consWarningMessage');
+
+    if (netProfit <= 0) {
+        badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-slate-800 text-slate-300 border border-slate-700";
+        badge.textContent = t.badgeWaiting;
+        statusText.textContent = t.statusWaiting;
+        statusText.className = "text-2xl font-bold text-slate-300";
+        progressBar.className = "bg-slate-600 h-full transition-all duration-500";
+        warningMsg.classList.add('hidden');
+    } else if (consistencyPercentage <= 50.0) {
+        badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
+        badge.textContent = t.badgePassed;
+        statusText.textContent = t.statusPassed;
+        statusText.className = "text-2xl font-bold text-emerald-400";
+        progressBar.className = "bg-emerald-500 h-full transition-all duration-500";
+        warningMsg.classList.add('hidden');
+    } else {
+        badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-amber-500/10 text-amber-400 border border-amber-500/20";
+        badge.textContent = t.badgeViolation;
+        statusText.textContent = t.statusViolation;
+        statusText.className = "text-2xl font-bold text-amber-400";
+        progressBar.className = "bg-amber-500 h-full transition-all duration-500";
+
+        let requiredTotal = bestDay / 0.50;
+        let neededMore = requiredTotal - netProfit;
+        warningMsg.classList.remove('hidden');
+        warningMsg.innerHTML = t.warningMsg(bestDay.toFixed(2), neededMore.toFixed(2));
+    }
+
+    // Payout Section updates
+    let availableWithdraw = Math.max(0, currentBalance - 50100);
+    document.getElementById('payoutAvailable').textContent = `$${Math.min(2000, availableWithdraw).toLocaleString('en-US', {minimumFractionDigits: 2})}`;
+    document.getElementById('totalDaysCount').textContent = t.totalDaysText(trades.length);
+
+    const payoutDaysStatus = document.getElementById('payoutDaysStatus');
+    payoutDaysStatus.textContent = `${qualifyingDaysCount} / 5 дней`;
+    payoutDaysStatus.className = qualifyingDaysCount >= 5 ? "font-bold text-emerald-400" : "font-bold text-amber-400";
+
+    // Render Charts
+    renderCharts(chartLabels, chartBalanceData, chartTrailingData, chartDailyProfits);
+}
+
+function renderCharts(labels, balanceData, trailingData, dailyProfits) {
+    // 1. Profit & Trailing Chart
+    const ctxProfit = document.getElementById('profitChart').getContext('2d');
+    if (profitChartInstance) profitChartInstance.destroy();
+
+    profitChartInstance = new Chart(ctxProfit, {
+        type: 'line',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Account Balance',
+                    data: balanceData,
+                    borderColor: '#f59e0b',
+                    backgroundColor: 'rgba(245, 158, 11, 0.1)',
+                    borderWidth: 2,
+                    fill: true,
+                    tension: 0.2
+                },
+                {
+                    label: 'Liquidation Threshold',
+                    data: trailingData,
+                    borderColor: '#f43f5e',
+                    borderDash: [5, 5],
+                    borderWidth: 1.5,
+                    fill: false,
+                    pointRadius: 0
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+            },
+            plugins: {
+                legend: { labels: { color: '#cbd5e1', font: { size: 11 } } }
+            }
+        }
+    });
+
+    // 2. Consistency Distribution Chart
+    const ctxConsistency = document.getElementById('consistencyChart').getContext('2d');
+    if (consistencyChartInstance) consistencyChartInstance.destroy();
+
+    const barColors = dailyProfits.map(p => p >= 0 ? '#10b981' : '#f43f5e');
+
+    consistencyChartInstance = new Chart(ctxConsistency, {
+        type: 'bar',
+        data: {
+            labels: labels.slice(1),
+            datasets: [{
+                label: 'Day Profit ($)',
+                data: dailyProfits.slice(1),
+                backgroundColor: barColors,
+                borderRadius: 6
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } },
+                y: { grid: { color: 'rgba(255,255,255,0.05)' }, ticks: { color: '#94a3b8', font: { size: 10 } } }
+            },
+            plugins: {
+                legend: { display: false }
+            }
+        }
+    });
+}
+
+function requestPayout() {
+    const t = translations[currentLang];
+    const wallet = document.getElementById('payoutWallet').value;
+    const method = document.getElementById('payoutMethod').value;
+    
+    let netProfit = trades.reduce((acc, curr) => acc + curr.profit, 0);
+    let bestDay = trades.reduce((max, curr) => curr.profit > max ? curr.profit : max, 0);
+    let qualifyingDaysCount = trades.filter(t => t.profit >= 50).length;
+    let currentBalance = 50000 + netProfit;
+    let consistencyPercentage = netProfit > 0 ? (bestDay / netProfit) * 100 : 0;
+
+    if (qualifyingDaysCount < 5) {
+        alert(t.alertNotEnoughDays);
+        return;
+    }
+    if (currentBalance < 52600) {
+        alert(t.alertSafetyNetNotReached);
+        return;
+    }
+    if (consistencyPercentage > 50.0) {
+        alert(t.alertConsistencyFailed);
+        return;
+    }
+    if (!wallet) {
+        alert(t.alertNoWallet);
+        return;
+    }
+
+    let withdrawAmount = Math.min(2000, currentBalance - 50100);
+    alert(t.alertSuccessPayout(withdrawAmount.toFixed(2), method, wallet));
+}
+
+// Initial initialization
+updateTexts();
+renderDashboard();
+</script>
+</body>
+</html>
