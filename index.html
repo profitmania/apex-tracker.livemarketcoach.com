@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Legacy 50K - Trading & Payout Tracker</title>
+    <title>Apex Legacy 50K - Trading & Payout Tracker with Tradovate Import</title>
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome Icons -->
@@ -25,19 +25,34 @@
                     Apex Legacy 50K Tracker
                     <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md font-normal">PA Account</span>
                 </h1>
-                <p class="text-xs text-slate-400">Live Market Coach • Tradovate PA • 100% First $25k Payout</p>
+                <p class="text-xs text-slate-400">Live Market Coach • Tradovate CSV Sync • 100% First $25k Payout</p>
             </div>
         </div>
-        <div class="flex items-center gap-3">
+        
+        <div class="flex flex-wrap items-center gap-2.5">
+            <!-- Tradovate Import Button -->
+            <button onclick="openImportModal()" class="px-3 py-1.5 bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5 shadow-sm">
+                <i class="fa-solid fa-file-csv text-sm"></i> <span data-i18n="btnImport">Импорт Tradovate CSV</span>
+            </button>
+            
+            <!-- Export Backup Button -->
+            <button onclick="exportData()" class="px-3 py-1.5 bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 rounded-lg text-xs font-medium transition cursor-pointer flex items-center gap-1.5">
+                <i class="fa-solid fa-download"></i> <span data-i18n="btnExport">Экспорт</span>
+            </button>
+
+            <!-- Language Switcher -->
             <button onclick="toggleLanguage()" id="langBtn" class="px-3 py-1.5 bg-indigo-500/10 hover:bg-indigo-500/20 text-indigo-400 border border-indigo-500/30 rounded-lg text-xs font-semibold transition cursor-pointer flex items-center gap-1.5">
                 <i class="fa-solid fa-globe"></i> <span id="langBtnText">RU / EN</span>
             </button>
+
+            <!-- Reset Data -->
             <button onclick="resetData()" id="resetBtn" class="px-3 py-1.5 bg-rose-500/10 hover:bg-rose-500/20 text-rose-400 border border-rose-500/30 rounded-lg text-xs font-medium transition cursor-pointer">
-                <i class="fa-solid fa-rotate-right mr-1.5"></i> Сбросить данные
+                <i class="fa-solid fa-rotate-right mr-1"></i>
             </button>
-            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-3 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-2">
+
+            <div class="bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 px-2.5 py-1.5 rounded-lg text-xs font-semibold flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                <span id="statusActiveText">Счёт Активен</span>
+                <span id="statusActiveText">PA Active</span>
             </div>
         </div>
     </div>
@@ -63,7 +78,7 @@
         <!-- Safety Net Threshold -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
             <div class="flex justify-between items-start text-slate-400 mb-2">
-                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblSafetyNet">Safety Net (Мин. $52,600)</span>
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblSafetyNet">Safety Net ($52,600)</span>
                 <i class="fa-solid fa-shield-halved text-slate-500"></i>
             </div>
             <div class="text-2xl font-bold text-amber-400" id="statSafetyNetLeft">$2,600.00</div>
@@ -114,7 +129,7 @@
         </div>
     </div>
 
-    <!-- Middle Section: Consistency Progress & Form -->
+    <!-- Middle Section: Consistency Progress & Manual Entry -->
     <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- Consistency Rule Breakdown -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 lg:col-span-2 flex flex-col justify-between">
@@ -126,7 +141,7 @@
                     <span id="consistencyBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Выполнено</span>
                 </div>
                 <p class="text-xs text-slate-400 mb-6" data-i18n="consDesc">
-                    Правило Apex требуют, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.
+                    Правило Apex требует, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                     <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
@@ -213,7 +228,7 @@
                     </tbody>
                 </table>
                 <div id="emptyTableState" class="text-center py-8 text-slate-500 text-sm" data-i18n="emptyTable">
-                    Записей пока нет. Добавьте первый день торговой сессии выше.
+                    Записей пока нет. Загрузите CSV-файл Tradovate или добавьте первый день вручную.
                 </div>
             </div>
         </div>
@@ -274,15 +289,87 @@
     </div>
 </main>
 
+<!-- Tradovate CSV Import Modal -->
+<div id="importModal" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="bg-slate-900 border border-slate-800 rounded-2xl w-full max-w-xl p-6 shadow-2xl relative space-y-5">
+        <div class="flex justify-between items-center border-b border-slate-800 pb-4">
+            <h3 class="text-lg font-bold text-white flex items-center gap-2">
+                <i class="fa-solid fa-file-csv text-emerald-400"></i> <span data-i18n="modalImportTitle">Импорт файлов Tradovate (Performance.csv)</span>
+            </h3>
+            <button onclick="closeImportModal()" class="text-slate-400 hover:text-white p-1 transition cursor-pointer">
+                <i class="fa-solid fa-xmark text-lg"></i>
+            </button>
+        </div>
+
+        <!-- Drop Zone -->
+        <div id="dropZone" onclick="document.getElementById('csvFileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 bg-slate-950/50 hover:bg-slate-950 p-6 rounded-xl text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
+            <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-400/80"></i>
+            <p class="text-sm font-medium text-slate-200" data-i18n="dropText">Перетащите файл Performance.csv сюда или нажмите для выбора</p>
+            <p class="text-xs text-slate-500">Поддерживаются стандартные CSV-отчеты Tradovate</p>
+            <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
+        </div>
+
+        <!-- Preview Results Area -->
+        <div id="importPreview" class="hidden space-y-3">
+            <div class="flex justify-between items-center text-xs text-slate-400">
+                <span>Распознано торговых дней: <strong id="previewDaysCount" class="text-white">0</strong></span>
+                <span>Всего сделок: <strong id="previewTradesCount" class="text-white">0</strong></span>
+                <span>Итоговый PnL: <strong id="previewTotalPnL" class="text-white">$0.00</strong></span>
+            </div>
+
+            <div class="max-h-48 overflow-y-auto border border-slate-800 rounded-xl bg-slate-950">
+                <table class="w-full text-left text-xs border-collapse">
+                    <thead class="bg-slate-900 border-b border-slate-800 text-slate-400 sticky top-0">
+                        <tr>
+                            <th class="p-2.5">Дата</th>
+                            <th class="p-2.5">Результат</th>
+                            <th class="p-2.5">Сделок</th>
+                            <th class="p-2.5">Инструменты</th>
+                        </tr>
+                    </thead>
+                    <tbody id="previewTableBody" class="divide-y divide-slate-800/60">
+                        <!-- Populated dynamically -->
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Import Mode Options -->
+            <div class="space-y-2 pt-2">
+                <label class="block text-xs font-medium text-slate-400">Режим импорта:</label>
+                <div class="grid grid-cols-2 gap-3 text-xs">
+                    <label class="flex items-center gap-2 bg-slate-950 p-2.5 border border-slate-800 rounded-xl cursor-pointer">
+                        <input type="radio" name="importOption" value="merge" checked class="text-emerald-500 focus:ring-0">
+                        <span class="text-slate-200">Обновить / Дополнить</span>
+                    </label>
+                    <label class="flex items-center gap-2 bg-slate-950 p-2.5 border border-slate-800 rounded-xl cursor-pointer">
+                        <input type="radio" name="importOption" value="overwrite" class="text-emerald-500 focus:ring-0">
+                        <span class="text-rose-400">Заменить всю историю</span>
+                    </label>
+                </div>
+            </div>
+        </div>
+
+        <div class="flex justify-end gap-3 border-t border-slate-800 pt-4">
+            <button onclick="closeImportModal()" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-300 rounded-xl text-xs font-medium cursor-pointer transition">
+                Отмена
+            </button>
+            <button id="applyImportBtn" onclick="applyImportedData()" disabled class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 disabled:opacity-50 disabled:cursor-not-allowed text-white rounded-xl text-xs font-semibold cursor-pointer transition">
+                Применить к трекеру
+            </button>
+        </div>
+    </div>
+</div>
+
 <!-- Footer -->
 <footer class="bg-slate-900 border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
-    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Настроено под правила Apex Trader Funding 2026.</p>
+    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex Trader Funding 2026.</p>
 </footer>
 
-<!-- JavaScript Application Logic & Charts -->
+<!-- JavaScript Application Logic, CSV Parser & Charts -->
 <script>
 let currentLang = localStorage.getItem('apex_lang') || 'ru';
 let trades = JSON.parse(localStorage.getItem('apex_50k_trades')) || [];
+let parsedImportDays = [];
 
 let profitChartInstance = null;
 let consistencyChartInstance = null;
@@ -290,8 +377,10 @@ let consistencyChartInstance = null;
 const translations = {
     en: {
         langBtnText: "RU / EN",
-        resetBtn: '<i class="fa-solid fa-rotate-right mr-1.5"></i> Reset Data',
-        statusActiveText: "Account Active",
+        resetBtn: '<i class="fa-solid fa-rotate-right"></i>',
+        btnImport: "Import Tradovate CSV",
+        btnExport: "Export Data",
+        statusActiveText: "PA Active",
         lblBalance: "Account Balance",
         lblTotalProfit: "total profit",
         lblSafetyNet: "Safety Net ($52,600)",
@@ -320,7 +409,7 @@ const translations = {
         thQualify: "Qualify (&ge;$50)",
         thNotes: "Notes",
         thAction: "Action",
-        emptyTable: "No records yet. Add your first trading day above.",
+        emptyTable: "No records yet. Import Tradovate CSV or add your first day above.",
         payoutTitle: "My First Payout (Apex)",
         payoutAvailableLabel: "Available to Payout:",
         payoutMaxLabel: "Max (1st Payout):",
@@ -333,6 +422,8 @@ const translations = {
         payoutBtnText: "Request Apex Payout",
         payoutFooter: "Apex payout windows: 1st–15th and 16th–last day of the month.",
         footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Built for Apex Trader Funding 2026 Rules.",
+        modalImportTitle: "Import Tradovate CSV (Performance.csv)",
+        dropText: "Drag & drop your Performance.csv file here, or click to browse",
         statusPassed: "Passed",
         statusViolation: "50% Exceeded",
         statusWaiting: "Waiting",
@@ -351,8 +442,10 @@ const translations = {
     },
     ru: {
         langBtnText: "EN / RU",
-        resetBtn: '<i class="fa-solid fa-rotate-right mr-1.5"></i> Сбросить данные',
-        statusActiveText: "Счёт Активен",
+        resetBtn: '<i class="fa-solid fa-rotate-right"></i>',
+        btnImport: "Импорт Tradovate CSV",
+        btnExport: "Экспорт",
+        statusActiveText: "PA Active",
         lblBalance: "Баланс счёта",
         lblTotalProfit: "общая прибыль",
         lblSafetyNet: "Safety Net ($52,600)",
@@ -381,7 +474,7 @@ const translations = {
         thQualify: "Квалиф. (&ge;$50)",
         thNotes: "Заметки",
         thAction: "Действие",
-        emptyTable: "Записей пока нет. Добавьте первый день торговой сессии выше.",
+        emptyTable: "Записей пока нет. Загрузите CSV-файл Tradovate или добавьте первый день вручную.",
         payoutTitle: "Первая выплата (First Payout)",
         payoutAvailableLabel: "Доступно к выводу:",
         payoutMaxLabel: "Максимум (1-й вывод):",
@@ -393,7 +486,9 @@ const translations = {
         payoutWalletLabel: "Реквизиты / Кошелек",
         payoutBtnText: "Запросить выплату APEX",
         payoutFooter: "Окна запроса Apex: 1–15 и 16–31 числа каждого месяца.",
-        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Настроено под правила Apex Trader Funding 2026.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex Trader Funding 2026.",
+        modalImportTitle: "Импорт файлов Tradovate (Performance.csv)",
+        dropText: "Перетащите файл Performance.csv сюда или нажмите для выбора",
         statusPassed: "Выполнено",
         statusViolation: "Превышение 50%",
         statusWaiting: "Ожидание",
@@ -467,6 +562,223 @@ function saveAndRender() {
     renderDashboard();
 }
 
+/* ================= TRADOVATE CSV PARSER LOGIC ================= */
+function openImportModal() {
+    document.getElementById('importModal').classList.remove('hidden');
+    document.getElementById('importPreview').classList.add('hidden');
+    document.getElementById('applyImportBtn').disabled = true;
+    document.getElementById('csvFileInput').value = '';
+    parsedImportDays = [];
+}
+
+function closeImportModal() {
+    document.getElementById('importModal').classList.add('hidden');
+}
+
+// Setup Drag & Drop handlers
+const dropZone = document.getElementById('dropZone');
+['dragenter', 'dragover'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.add('border-emerald-500', 'bg-slate-900');
+    }, false);
+});
+['dragleave', 'drop'].forEach(eventName => {
+    dropZone.addEventListener(eventName, (e) => {
+        e.preventDefault();
+        dropZone.classList.remove('border-emerald-500', 'bg-slate-900');
+    }, false);
+});
+dropZone.addEventListener('drop', (e) => {
+    const files = e.dataTransfer.files;
+    if (files.length) processCSVFile(files[0]);
+});
+
+function handleFileSelect(e) {
+    if (e.target.files.length) processCSVFile(e.target.files[0]);
+}
+
+function processCSVFile(file) {
+    const reader = new FileReader();
+    reader.onload = function(evt) {
+        parseTradovateCSV(evt.target.result);
+    };
+    reader.readAsText(file);
+}
+
+function parseTradovateCSV(csvText) {
+    const lines = csvText.split(/\r\n|\n/);
+    if (lines.length < 2) return;
+
+    // Helper to safely split CSV line taking quotes into account
+    const parseLine = (text) => {
+        const result = [];
+        let cur = '';
+        let inQuotes = false;
+        for (let i = 0; i < text.length; i++) {
+            const c = text[i];
+            if (c === '"') { inQuotes = !inQuotes; }
+            else if (c === ',' && !inQuotes) { result.push(cur.trim()); cur = ''; }
+            else { cur += c; }
+        }
+        result.push(cur.trim());
+        return result;
+    };
+
+    const headers = parseLine(lines[0]).map(h => h.toLowerCase());
+
+    // Locate PnL index
+    let pnlIdx = headers.findIndex(h => h === 'pnl' || h === 'realizedpnl' || h === 'realized pnl' || h === 'profit');
+    // Locate Timestamp/Date index (prefer soldTimestamp for closed positions)
+    let dateIdx = headers.findIndex(h => h === 'soldtimestamp');
+    if (dateIdx === -1) dateIdx = headers.findIndex(h => h.includes('timestamp') || h.includes('date'));
+    let symbolIdx = headers.findIndex(h => h === 'symbol');
+
+    if (pnlIdx === -1 || dateIdx === -1) {
+        alert("Не удалось распознать формат Tradovate CSV. Убедитесь, что загружаете оригинальный Performance.csv");
+        return;
+    }
+
+    const dayMap = {};
+
+    for (let i = 1; i < lines.length; i++) {
+        if (!lines[i].trim()) continue;
+        const cols = parseLine(lines[i]);
+        if (cols.length <= Math.max(pnlIdx, dateIdx)) continue;
+
+        let rawPnL = cols[pnlIdx];
+        let rawDate = cols[dateIdx];
+        let symbol = symbolIdx !== -1 ? cols[symbolIdx] : 'Tradovate';
+
+        // Parse PnL: "$37.50" or "$(124.00)" or "-$124.00"
+        let pnlVal = 0;
+        if (rawPnL.startsWith('$(') && rawPnL.endsWith(')')) {
+            pnlVal = -parseFloat(rawPnL.substring(2, rawPnL.length - 1).replace(/,/g, ''));
+        } else if (rawPnL.startsWith('$')) {
+            pnlVal = parseFloat(rawPnL.substring(1).replace(/,/g, ''));
+        } else {
+            pnlVal = parseFloat(rawPnL.replace(/,/g, '')) || 0;
+        }
+
+        // Parse Date: "11/03/2026 07:23:26" -> YYYY-MM-DD
+        let dtPart = rawDate.split(' ')[0];
+        let formattedDate = dtPart;
+        if (dtPart.includes('/')) {
+            let parts = dtPart.split('/');
+            if (parts.length === 3) {
+                let m = parts[0].padStart(2, '0');
+                let d = parts[1].padStart(2, '0');
+                let y = parts[2];
+                formattedDate = `${y}-${m}-${d}`;
+            }
+        }
+
+        if (!dayMap[formattedDate]) {
+            dayMap[formattedDate] = { profit: 0, tradesCount: 0, symbols: new Set() };
+        }
+
+        dayMap[formattedDate].profit += pnlVal;
+        dayMap[formattedDate].tradesCount += 1;
+        if (symbol) dayMap[formattedDate].symbols.add(symbol);
+    }
+
+    parsedImportDays = Object.keys(dayMap).sort().map(date => {
+        const item = dayMap[date];
+        const symList = Array.from(item.symbols).join(', ');
+        return {
+            date,
+            profit: Math.round(item.profit * 100) / 100,
+            tradesCount: item.tradesCount,
+            symbols: symList,
+            note: `Tradovate CSV (${item.tradesCount} trades, ${symList})`
+        };
+    });
+
+    renderImportPreview();
+}
+
+function renderImportPreview() {
+    const previewArea = document.getElementById('importPreview');
+    const tbody = document.getElementById('previewTableBody');
+    tbody.innerHTML = '';
+
+    if (parsedImportDays.length === 0) {
+        previewArea.classList.add('hidden');
+        document.getElementById('applyImportBtn').disabled = true;
+        return;
+    }
+
+    let totalPnL = parsedImportDays.reduce((acc, d) => acc + d.profit, 0);
+    let totalTrades = parsedImportDays.reduce((acc, d) => acc + d.tradesCount, 0);
+
+    document.getElementById('previewDaysCount').textContent = parsedImportDays.length;
+    document.getElementById('previewTradesCount').textContent = totalTrades;
+    document.getElementById('previewTotalPnL').textContent = `${totalPnL >= 0 ? '+' : ''}$${totalPnL.toFixed(2)}`;
+    document.getElementById('previewTotalPnL').className = totalPnL >= 0 ? "text-emerald-400 font-bold" : "text-rose-400 font-bold";
+
+    parsedImportDays.forEach(d => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+            <td class="p-2.5 text-slate-200 font-mono">${d.date}</td>
+            <td class="p-2.5 font-semibold ${d.profit >= 0 ? 'text-emerald-400' : 'text-rose-400'}">
+                ${d.profit >= 0 ? '+' : ''}$${d.profit.toFixed(2)}
+            </td>
+            <td class="p-2.5 text-slate-400">${d.tradesCount}</td>
+            <td class="p-2.5 text-slate-400 text-[11px]">${d.symbols}</td>
+        `;
+        tbody.appendChild(row);
+    });
+
+    previewArea.classList.remove('hidden');
+    document.getElementById('applyImportBtn').disabled = false;
+}
+
+function applyImportedData() {
+    if (!parsedImportDays.length) return;
+
+    const option = document.querySelector('input[name="importOption"]:checked').value;
+
+    if (option === 'overwrite') {
+        trades = parsedImportDays.map(d => ({
+            id: Date.now() + Math.random(),
+            date: d.date,
+            profit: d.profit,
+            note: d.note
+        }));
+    } else {
+        // Merge mode: overwrite existing dates or push new ones
+        parsedImportDays.forEach(imp => {
+            const existingIdx = trades.findIndex(t => t.date === imp.date);
+            if (existingIdx !== -1) {
+                trades[existingIdx].profit = imp.profit;
+                trades[existingIdx].note = imp.note;
+            } else {
+                trades.push({
+                    id: Date.now() + Math.random(),
+                    date: imp.date,
+                    profit: imp.profit,
+                    note: imp.note
+                });
+            }
+        });
+    }
+
+    trades.sort((a, b) => new Date(a.date) - new Date(b.date));
+    saveAndRender();
+    closeImportModal();
+}
+
+function exportData() {
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(trades, null, 2));
+    const downloadAnchor = document.createElement('a');
+    downloadAnchor.setAttribute("href", dataStr);
+    downloadAnchor.setAttribute("download", `apex_50k_trades_${new Date().toISOString().split('T')[0]}.json`);
+    document.body.appendChild(downloadAnchor);
+    downloadAnchor.click();
+    downloadAnchor.remove();
+}
+
+/* ================= MAIN DASHBOARD RENDER ================= */
 function renderDashboard() {
     const t = translations[currentLang];
     const tableBody = document.getElementById('tradeTableBody');
@@ -483,7 +795,6 @@ function renderDashboard() {
         emptyState.classList.add('hidden');
     }
 
-    // Process balance and trailing threshold calculations
     let currentBalance = 50000;
     let peakBalance = 50000;
     let trailingThreshold = 47500;
@@ -514,7 +825,7 @@ function renderDashboard() {
         const row = document.createElement('tr');
         row.className = "hover:bg-slate-900/50 transition";
         row.innerHTML = `
-            <td class="py-3 pr-4 text-slate-300">${tr.date}</td>
+            <td class="py-3 pr-4 text-slate-300 font-mono text-xs">${tr.date}</td>
             <td class="py-3 pr-4 font-semibold ${isProfit ? 'text-emerald-400' : 'text-rose-400'}">
                 ${isProfit ? '+' : ''}$${tr.profit.toFixed(2)}
             </td>
@@ -605,7 +916,6 @@ function renderDashboard() {
 }
 
 function renderCharts(labels, balanceData, trailingData, dailyProfits) {
-    // 1. Profit & Trailing Chart
     const ctxProfit = document.getElementById('profitChart').getContext('2d');
     if (profitChartInstance) profitChartInstance.destroy();
 
@@ -647,7 +957,6 @@ function renderCharts(labels, balanceData, trailingData, dailyProfits) {
         }
     });
 
-    // 2. Consistency Distribution Chart
     const ctxConsistency = document.getElementById('consistencyChart').getContext('2d');
     if (consistencyChartInstance) consistencyChartInstance.destroy();
 
@@ -710,7 +1019,7 @@ function requestPayout() {
     alert(t.alertSuccessPayout(withdrawAmount.toFixed(2), method, wallet));
 }
 
-// Initial initialization
+// Initial setup
 updateTexts();
 renderDashboard();
 </script>
