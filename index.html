@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Legacy 50K - Trading & Payout Tracker with Tradovate Import</title>
+    <title>Apex Legacy 50K - Trading & Payout Tracker with Dynamic Risk Planner</title>
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome Icons -->
@@ -25,7 +25,7 @@
                     Apex Legacy 50K Tracker
                     <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md font-normal">PA Account</span>
                 </h1>
-                <p class="text-xs text-slate-400">Live Market Coach • Tradovate CSV Sync • 100% First $25k Payout</p>
+                <p class="text-xs text-slate-400">Live Market Coach • Tradovate CSV Sync • Dynamic Risk Planner</p>
             </div>
         </div>
         
@@ -103,6 +103,68 @@
             </div>
             <div class="text-2xl font-bold text-emerald-400" id="statConsistencyStatus">Passed</div>
             <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Best day &le; 50% profit</div>
+        </div>
+    </div>
+
+    <!-- DYNAMIC RISK PLANNER & NAVIGATOR -->
+    <div class="bg-slate-900 border border-amber-500/20 rounded-2xl p-6 shadow-xl space-y-5 relative overflow-hidden">
+        <div class="absolute -right-10 -top-10 w-40 h-40 bg-amber-500/5 rounded-full blur-2xl pointer-events-none"></div>
+        
+        <div class="flex flex-col md:flex-row justify-between md:items-center gap-4 border-b border-slate-800 pb-4">
+            <div>
+                <h2 class="text-lg font-bold text-white flex items-center gap-2">
+                    <i class="fa-solid fa-sliders text-amber-400"></i>
+                    <span data-i18n="plannerTitle">Next Session Risk & Target Calculator</span>
+                </h2>
+                <p class="text-xs text-slate-400 mt-0.5" data-i18n="plannerSub">Adjust your personal daily loss limit to calculate optimal target and risk buffer.</p>
+            </div>
+            
+            <!-- Custom Daily Loss Limit Input -->
+            <div class="flex items-center gap-3 bg-slate-950/80 border border-slate-800 p-2 rounded-xl">
+                <label class="text-xs font-semibold text-slate-300 pl-2 whitespace-nowrap flex items-center gap-1.5">
+                    <i class="fa-solid fa-shield text-rose-400"></i>
+                    <span data-i18n="lblMaxLossInput">Max Daily Loss Limit ($):</span>
+                </label>
+                <input type="number" id="customLossLimit" value="500" min="50" max="2000" step="50" oninput="calculateRiskPlanner()" class="w-28 bg-slate-900 border border-slate-700 focus:border-amber-500 text-amber-400 font-bold text-sm text-center rounded-lg py-1 focus:outline-none transition">
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            <!-- Recommended Target -->
+            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl">
+                <div class="text-xs text-slate-400 mb-1" data-i18n="planTargetLbl">Optimal Session Profit Target</div>
+                <div class="text-xl font-bold text-emerald-400" id="planOptimalTarget">+$500.00 – $600.00</div>
+                <div class="text-[11px] text-slate-500 mt-1" id="planTargetSub">Optimal 1:1 to 1:1.2 R:R ratio</div>
+            </div>
+
+            <!-- Buffer Capacity (Losing Days) -->
+            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl">
+                <div class="text-xs text-slate-400 mb-1" data-i18n="planBufferLbl">Buffer Capacity (Max Loss)</div>
+                <div class="text-xl font-bold text-amber-400" id="planBufferDays">3.6 Days</div>
+                <div class="text-[11px] text-slate-500 mt-1" id="planBufferSub">Total cushion to $47,500 threshold</div>
+            </div>
+
+            <!-- Days to Safety Net -->
+            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl">
+                <div class="text-xs text-slate-400 mb-1" data-i18n="planDaysToSafetyLbl">Est. Days to Safety Net</div>
+                <div class="text-xl font-bold text-indigo-400" id="planEstDays">~6.5 Days</div>
+                <div class="text-[11px] text-slate-500 mt-1" id="planSafetySub">To reach $52,600 payout goal</div>
+            </div>
+
+            <!-- Distance to Break Even -->
+            <div class="bg-slate-950/60 border border-slate-800 p-4 rounded-xl">
+                <div class="text-xs text-slate-400 mb-1" data-i18n="planBreakEvenLbl">To Break-Even ($50k)</div>
+                <div class="text-xl font-bold text-white" id="planBreakEven">+$682.50</div>
+                <div class="text-[11px] text-slate-500 mt-1" id="planBreakEvenSub">Needed to recover starting capital</div>
+            </div>
+        </div>
+
+        <!-- Dynamic Guidance Note -->
+        <div class="bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-xl text-xs text-amber-200/90 flex items-start gap-2.5">
+            <i class="fa-solid fa-lightbulb text-amber-400 text-sm mt-0.5 shrink-0"></i>
+            <div id="dynamicAdviceText">
+                <strong>Smart Guidance:</strong> With a daily loss limit of $500.00, aiming for +$500.00 to +$600.00 per winning session gives you a healthy 1:1+ Risk-to-Reward ratio, allowing you to reach the $52,600 Safety Net in ~6-7 profitable sessions without violating Apex consistency rules.
+            </div>
         </div>
     </div>
 
@@ -301,7 +363,6 @@
             </button>
         </div>
 
-        <!-- Drop Zone -->
         <div id="dropZone" onclick="document.getElementById('csvFileInput').click()" class="border-2 border-dashed border-slate-700 hover:border-emerald-500/50 bg-slate-950/50 hover:bg-slate-950 p-6 rounded-xl text-center cursor-pointer transition flex flex-col items-center justify-center gap-2">
             <i class="fa-solid fa-cloud-arrow-up text-3xl text-emerald-400/80"></i>
             <p class="text-sm font-medium text-slate-200" data-i18n="dropText">Drag & drop your Performance.csv file here, or click to browse</p>
@@ -309,7 +370,6 @@
             <input type="file" id="csvFileInput" accept=".csv" class="hidden" onchange="handleFileSelect(event)">
         </div>
 
-        <!-- Preview Results Area -->
         <div id="importPreview" class="hidden space-y-3">
             <div class="flex justify-between items-center text-xs text-slate-400">
                 <span><span data-i18n="lblParsedDays">Parsed Trading Days:</span> <strong id="previewDaysCount" class="text-white">0</strong></span>
@@ -328,12 +388,10 @@
                         </tr>
                     </thead>
                     <tbody id="previewTableBody" class="divide-y divide-slate-800/60">
-                        <!-- Populated dynamically -->
                     </tbody>
                 </table>
             </div>
 
-            <!-- Import Mode Options -->
             <div class="space-y-2 pt-2">
                 <label class="block text-xs font-medium text-slate-400" data-i18n="lblImportMode">Import Mode:</label>
                 <div class="grid grid-cols-2 gap-3 text-xs">
@@ -365,7 +423,7 @@
     <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 2026 Rules.</p>
 </footer>
 
-<!-- JavaScript Application Logic, CSV Parser & Charts -->
+<!-- JavaScript Application Logic -->
 <script>
 let currentLang = localStorage.getItem('apex_lang') || 'en';
 let trades = JSON.parse(localStorage.getItem('apex_50k_trades')) || [];
@@ -389,6 +447,13 @@ const translations = {
         lblTrailingSub: "Stops at $50,100",
         lblConsistencyRule: "Consistency Rule (50%)",
         lblConsistencySub: "Best day &le; 50% profit",
+        plannerTitle: "Next Session Risk & Target Calculator",
+        plannerSub: "Adjust your personal daily loss limit to calculate optimal target and risk buffer.",
+        lblMaxLossInput: "Max Daily Loss Limit ($):",
+        planTargetLbl: "Optimal Session Profit Target",
+        planBufferLbl: "Buffer Capacity (Max Loss)",
+        planDaysToSafetyLbl: "Est. Days to Safety Net",
+        planBreakEvenLbl: "To Break-Even ($50k)",
         chartProfitTitle: "Balance & Trailing Drawdown Trajectory",
         chartConsistencyTitle: "Daily Profit Share vs 50% Limit",
         consTitle: "Apex 50% Consistency Rule Analysis",
@@ -463,8 +528,13 @@ const translations = {
         lblSafetyNetSub: "Осталось до порога вывода",
         lblTrailingStop: "Порог ликвидации",
         lblTrailingSub: "Остановка на $50,100",
-        lblConsistencyRule: "Consistency Rule (50%)",
-        lblConsistencySub: "Лучший день &le; 50% прибыли",
+        plannerTitle: "Калькулятор рисков и целей на сессию",
+        plannerSub: "Укажите индивидуальный лимит убытка в день для расчёта оптимального тейка и запаса прочности.",
+        lblMaxLossInput: "Дневной лимит убытка ($):",
+        planTargetLbl: "Оптимальная цель на сессию",
+        planBufferLbl: "Запас прочности (Дней макс. риска)",
+        planDaysToSafetyLbl: "Дней до Safety Net ($52.6k)",
+        planBreakEvenLbl: "До выхода в безубыток ($50k)",
         chartProfitTitle: "Динамика баланса и порога просадки",
         chartConsistencyTitle: "Распределение дневной прибыли (50% Rule)",
         consTitle: "Анализ Apex 50% Consistency Rule",
@@ -793,6 +863,51 @@ function exportData() {
     downloadAnchor.remove();
 }
 
+/* ================= DYNAMIC RISK PLANNER CALCULATIONS ================= */
+function calculateRiskPlanner() {
+    let lossLimitInput = parseFloat(document.getElementById('customLossLimit').value);
+    if (isNaN(lossLimitInput) || lossLimitInput <= 0) lossLimitInput = 500;
+
+    let netProfit = trades.reduce((acc, curr) => acc + curr.profit, 0);
+    let currentBalance = 50000 + netProfit;
+
+    // Trailing Threshold
+    let peakBalance = 50000;
+    let tempBal = 50000;
+    trades.forEach(t => {
+        tempBal += t.profit;
+        if (tempBal > peakBalance) peakBalance = tempBal;
+    });
+    let trailingThreshold = Math.min(50100, Math.max(47500, peakBalance - 2500));
+
+    let currentBuffer = currentBalance - trailingThreshold;
+    let bufferDays = (currentBuffer / lossLimitInput).toFixed(1);
+
+    // Recommended Target (Maintain 1:1 to 1:1.2 R:R)
+    let minTarget = lossLimitInput;
+    let maxTarget = lossLimitInput * 1.2;
+
+    document.getElementById('planOptimalTarget').textContent = `+$${minTarget.toFixed(0)} – $${maxTarget.toFixed(0)}`;
+    document.getElementById('planBufferDays').textContent = `${bufferDays} ${currentLang === 'en' ? 'Days' : 'Дней'}`;
+    
+    // Days needed to reach Safety Net ($52,600)
+    let distanceToSafetyNet = Math.max(0, 52600 - currentBalance);
+    let estDays = Math.ceil(distanceToSafetyNet / minTarget);
+    document.getElementById('planEstDays').textContent = distanceToSafetyNet === 0 ? "Ready" : `~${estDays} ${currentLang === 'en' ? 'Days' : 'Дней'}`;
+
+    // Distance to Break-even ($50,000)
+    let distanceToBreakEven = Math.max(0, 50000 - currentBalance);
+    document.getElementById('planBreakEven').textContent = distanceToBreakEven === 0 ? "$0.00" : `+$${distanceToBreakEven.toFixed(2)}`;
+
+    // Dynamic Guidance Note Update
+    const adviceEl = document.getElementById('dynamicAdviceText');
+    if (currentLang === 'en') {
+        adviceEl.innerHTML = `<strong>Smart Guidance:</strong> With your custom daily loss limit of <strong>$${lossLimitInput.toFixed(2)}</strong>, targeting <strong>+$${minTarget.toFixed(0)} to +$${maxTarget.toFixed(0)}</strong> per winning session establishes a healthy 1:1+ Risk-to-Reward ratio. Your current buffer of $${currentBuffer.toFixed(2)} tolerates ~<strong>${bufferDays} consecutive full loss days</strong>. Reaching Safety Net ($52,600) will take approximately <strong>~${estDays} winning sessions</strong>.`;
+    } else {
+        adviceEl.innerHTML = `<strong>Умный совет:</strong> При вашем дневном лимите убытка <strong>$${lossLimitInput.toFixed(2)}</strong>, целевой профит <strong>+$${minTarget.toFixed(0)} ... +$${maxTarget.toFixed(0)}</strong> даёт здоровое соотношение Risk/Reward 1:1+. Ваш текущий запас ($${currentBuffer.toFixed(2)}) выдержит ~<strong>${bufferDays} полных убыточных дней подряд</strong>. До уровня Safety Net ($52,600) потребуется примерно <strong>~${estDays} прибыльных сессий</strong>.`;
+    }
+}
+
 /* ================= MAIN DASHBOARD RENDER ================= */
 function renderDashboard() {
     const t = translations[currentLang];
@@ -924,6 +1039,9 @@ function renderDashboard() {
     const payoutDaysStatus = document.getElementById('payoutDaysStatus');
     payoutDaysStatus.textContent = `${qualifyingDaysCount} / 5 ${currentLang === 'en' ? 'days' : 'дней'}`;
     payoutDaysStatus.className = qualifyingDaysCount >= 5 ? "font-bold text-emerald-400" : "font-bold text-amber-400";
+
+    // Recalculate Risk Planner Values
+    calculateRiskPlanner();
 
     // Render Charts
     renderCharts(chartLabels, chartBalanceData, chartTrailingData, chartDailyProfits);
