@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Apex Legacy 50K - Trading & Payout Tracker with Dynamic Risk Planner</title>
+    <title>Apex Legacy 50K - Trading & Payout Tracker (30% Consistency Rule)</title>
     <!-- Tailwind CSS v4 CDN -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <!-- FontAwesome Icons -->
@@ -25,7 +25,7 @@
                     Apex Legacy 50K Tracker
                     <span class="text-xs bg-amber-500/20 text-amber-300 border border-amber-500/30 px-2 py-0.5 rounded-md font-normal">PA Account</span>
                 </h1>
-                <p class="text-xs text-slate-400">Live Market Coach • Tradovate CSV Sync • Dynamic Risk Planner</p>
+                <p class="text-xs text-slate-400">Live Market Coach • Tradovate CSV Sync • 30% Consistency Rule</p>
             </div>
         </div>
         
@@ -95,14 +95,14 @@
             <div class="text-xs text-slate-400 mt-1" id="statTrailingSub" data-i18n="lblTrailingSub">Stops at $50,100</div>
         </div>
 
-        <!-- 50% Consistency Status -->
+        <!-- 30% Consistency Status -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg">
             <div class="flex justify-between items-start text-slate-400 mb-2">
-                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblConsistencyRule">Consistency Rule (50%)</span>
+                <span class="text-xs font-medium uppercase tracking-wider" data-i18n="lblConsistencyRule">Consistency Rule (30%)</span>
                 <i class="fa-solid fa-scale-balanced text-slate-500"></i>
             </div>
             <div class="text-2xl font-bold text-emerald-400" id="statConsistencyStatus">Passed</div>
-            <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Best day ≤ 50% profit</div>
+            <div class="text-xs text-slate-400 mt-1" id="statConsistencySub" data-i18n="lblConsistencySub">Best day ≤ 30% profit</div>
         </div>
     </div>
 
@@ -163,7 +163,7 @@
         <div class="bg-amber-500/10 border border-amber-500/20 p-3.5 rounded-xl text-xs text-amber-200/90 flex items-start gap-2.5">
             <i class="fa-solid fa-lightbulb text-amber-400 text-sm mt-0.5 shrink-0"></i>
             <div id="dynamicAdviceText">
-                <strong>Smart Guidance:</strong> With your custom daily loss limit of $500.00, targeting +$500.00 to +$600.00 per winning session establishes a healthy 1:1+ Risk-to-Reward ratio. Your current buffer of $1817.50 tolerates ~3.6 consecutive full loss days. Reaching Safety Net ($52,600) will take approximately ~7 winning sessions.
+                <strong>Smart Guidance:</strong> With your custom daily loss limit of $500.00, targeting +$500.00 to +$600.00 per winning session establishes a healthy 1:1+ Risk-to-Reward ratio. Reaching Safety Net ($52,600) aligns smoothly with Apex 30% consistency rules (Min profit required = Best Day ÷ 0.3).
             </div>
         </div>
     </div>
@@ -183,7 +183,7 @@
         <!-- Consistency Chart -->
         <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 shadow-lg">
             <h2 class="text-base font-semibold text-white mb-4 flex items-center gap-2">
-                <i class="fa-solid fa-chart-bar text-indigo-400"></i> <span data-i18n="chartConsistencyTitle">Daily Profit Share vs 50% Limit</span>
+                <i class="fa-solid fa-chart-bar text-indigo-400"></i> <span data-i18n="chartConsistencyTitle">Daily Profit Share vs 30% Limit</span>
             </h2>
             <div class="h-64 relative">
                 <canvas id="consistencyChart"></canvas>
@@ -198,12 +198,12 @@
             <div>
                 <div class="flex justify-between items-center mb-4">
                     <h2 class="text-lg font-semibold text-white flex items-center gap-2">
-                        <i class="fa-solid fa-pie-chart text-indigo-400"></i> <span data-i18n="consTitle">Apex 50% Consistency Rule Analysis</span>
+                        <i class="fa-solid fa-pie-chart text-indigo-400"></i> <span data-i18n="consTitle">Apex 30% Consistency Rule Analysis (Windfall)</span>
                     </h2>
                     <span id="consistencyBadge" class="px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20">Passed</span>
                 </div>
                 <p class="text-xs text-slate-400 mb-6" data-i18n="consDesc">
-                    Apex rules require that no single day accounts for more than 50% of your total net profit. Your total net profit must be at least double your best winning day to qualify for payout.
+                    Apex Legacy rules require that no single trading day accounts for more than 30% of your total profit balance at payout time. Formula: Highest Profit Day ÷ 0.3 = Minimum Total Profit Required.
                 </p>
                 <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-6">
                     <div class="bg-slate-950/60 border border-slate-800/80 p-4 rounded-xl">
@@ -224,8 +224,8 @@
             <!-- Progress Bar -->
             <div>
                 <div class="flex justify-between text-xs text-slate-400 mb-2">
-                    <span data-i18n="consLimitText">Single Day Share Limit (Max 50.0%)</span>
-                    <span id="consTargetText">Target: 0.0% / 50.0%</span>
+                    <span data-i18n="consLimitText">Single Day Share Limit (Max 30.0%)</span>
+                    <span id="consTargetText">Target: 0.0% / 30.0%</span>
                 </div>
                 <div class="w-full bg-slate-950 rounded-full h-3 overflow-hidden border border-slate-800">
                     <div id="consProgressBar" class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
@@ -420,7 +420,7 @@
 
 <!-- Footer -->
 <footer class="bg-slate-900 border-t border-slate-800 mt-12 py-6 text-center text-xs text-slate-500">
-    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 2026 Rules.</p>
+    <p data-i18n="footerText">Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 30% Rule.</p>
 </footer>
 
 <!-- JavaScript Application Logic -->
@@ -445,8 +445,8 @@ const translations = {
         lblSafetyNetSub: "Left to Payout Threshold",
         lblTrailingStop: "Liquidation Level",
         lblTrailingSub: "Stops at $50,100",
-        lblConsistencyRule: "Consistency Rule (50%)",
-        lblConsistencySub: "Best day ≤ 50% profit",
+        lblConsistencyRule: "Consistency Rule (30%)",
+        lblConsistencySub: "Best day ≤ 30% profit",
         plannerTitle: "Next Session Risk & Target Calculator",
         plannerSub: "Adjust your personal daily loss limit to calculate optimal target and risk buffer.",
         lblMaxLossInput: "Max Daily Loss Limit ($):",
@@ -455,13 +455,13 @@ const translations = {
         planDaysToSafetyLbl: "Est. Days to Safety Net",
         planBreakEvenLbl: "To Break-Even ($50k)",
         chartProfitTitle: "Balance & Trailing Drawdown Trajectory",
-        chartConsistencyTitle: "Daily Profit Share vs 50% Limit",
-        consTitle: "Apex 50% Consistency Rule Analysis",
-        consDesc: "Apex rules require that no single day accounts for more than 50% of your total net profit. Your total net profit must be at least double your best winning day to qualify for payout.",
+        chartConsistencyTitle: "Daily Profit Share vs 30% Limit",
+        consTitle: "Apex 30% Consistency Rule Analysis (Windfall)",
+        consDesc: "Apex rules require that no single day accounts for more than 30% of your total net profit. Formula: Highest Profit Day ÷ 0.3 = Minimum Total Profit Required.",
         boxTotalProfit: "Net Profit",
         boxBestDay: "Best Trading Day",
         boxBestShare: "Best Day Share",
-        consLimitText: "Single Day Share Limit (Max 50.0%)",
+        consLimitText: "Single Day Share Limit (Max 30.0%)",
         formTitle: "Add Trading Day",
         labelDate: "Date",
         labelResult: "Day Result ($)",
@@ -486,7 +486,7 @@ const translations = {
         payoutWalletLabel: "Wallet Address / Rise Details",
         payoutBtnText: "Request Apex Payout",
         payoutFooter: "Apex payout windows: 1st–15th and 16th–last day of the month.",
-        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex Trader Funding 2026 Rules.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Apex 30% Consistency Rule.",
         modalImportTitle: "Import Tradovate CSV (Performance.csv)",
         dropText: "Drag & drop your Performance.csv file here, or click to browse",
         dropSub: "Supports standard Tradovate Performance CSV reports",
@@ -501,7 +501,7 @@ const translations = {
         btnCancel: "Cancel",
         btnApply: "Apply to Tracker",
         statusPassed: "Passed",
-        statusViolation: "50% Exceeded",
+        statusViolation: "30% Exceeded",
         statusWaiting: "Waiting",
         badgePassed: "Passed",
         badgeViolation: "Exceeded",
@@ -509,12 +509,12 @@ const translations = {
         confirmReset: "Are you sure you want to reset all trading history?",
         alertNotEnoughDays: "You need at least 5 trading days with a profit of $50+ to request a payout.",
         alertSafetyNetNotReached: "Account balance must reach at least $52,600 (Safety Net) to request a payout.",
-        alertConsistencyFailed: "Your best trading day exceeds 50% of your total profit. Earn more on other days to pass consistency.",
+        alertConsistencyFailed: "Your best trading day exceeds 30% of your total profit. Earn more on other days to pass consistency.",
         alertNoWallet: "Please enter your payment details or crypto address.",
         alertSuccessPayout: (amt, method, wallet) => `Payout request of $${amt} via ${method} submitted to Apex Trader Funding!\nDetails: ${wallet}`,
-        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Your best day ($${best}) exceeds 50%. You need to earn an additional <span class="text-white font-bold">$${needed}</span> on other days to meet consistency.`,
+        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Your best day ($${best}) exceeds 30%. You need to earn an additional <span class="text-white font-bold">$${needed}</span> on other days to meet consistency (Best Day ÷ 0.3).`,
         totalDaysText: (count) => `Total days: ${count}`,
-        targetText: (perc) => `Target: ${perc}% / 50.0%`
+        targetText: (perc) => `Target: ${perc}% / 30.0%`
     },
     ru: {
         langBtnText: "RU / EN",
@@ -528,8 +528,8 @@ const translations = {
         lblSafetyNetSub: "Осталось до порога вывода",
         lblTrailingStop: "Порог ликвидации",
         lblTrailingSub: "Остановка на $50,100",
-        lblConsistencyRule: "Consistency Rule (50%)",
-        lblConsistencySub: "Лучший день ≤ 50% прибыли",
+        lblConsistencyRule: "Consistency Rule (30%)",
+        lblConsistencySub: "Лучший день ≤ 30% прибыли",
         plannerTitle: "Калькулятор рисков и целей на сессию",
         plannerSub: "Укажите индивидуальный лимит убытка в день для расчёта оптимального тейка и запаса прочности.",
         lblMaxLossInput: "Дневной лимит убытка ($):",
@@ -538,13 +538,13 @@ const translations = {
         planDaysToSafetyLbl: "Дней до Safety Net ($52.6k)",
         planBreakEvenLbl: "До выхода в безубыток ($50k)",
         chartProfitTitle: "Динамика баланса и порога просадки",
-        chartConsistencyTitle: "Распределение дневной прибыли (50% Rule)",
-        consTitle: "Анализ Apex 50% Consistency Rule",
-        consDesc: "Правило Apex требует, чтобы один лучший день составлял не более 50% от всей вашей чистой прибыли. Для запроса вывода суммарная прибыль должна минимум в 2 раза превышать результат самого удачного дня.",
+        chartConsistencyTitle: "Распределение дневной прибыли (30% Rule)",
+        consTitle: "Анализ Apex 30% Consistency Rule (Windfall)",
+        consDesc: "Правило Apex 30% требует, чтобы один лучший день составлял не более 30% от всей вашей чистой прибыли. Формула: Лучший день ÷ 0.3 = Мин. необходимая прибыль.",
         boxTotalProfit: "Чистая прибыль",
         boxBestDay: "Самый прибыльный день",
         boxBestShare: "Доля лучшего дня",
-        consLimitText: "Лимит доли одного дня (Макс 50.0%)",
+        consLimitText: "Лимит доли одного дня (Макс 30.0%)",
         formTitle: "Добавить торговый день",
         labelDate: "Дата",
         labelResult: "Результат дня ($)",
@@ -569,7 +569,7 @@ const translations = {
         payoutWalletLabel: "Реквизиты / Кошелек",
         payoutBtnText: "Запросить выплату APEX",
         payoutFooter: "Окна запроса Apex: 1–15 и 16–31 числа каждого месяца.",
-        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex Trader Funding 2026.",
+        footerText: "Apex Legacy 50K Interactive Tracker • Live Market Coach • Tradovate CSV Sync • Правила Apex 30% Consistency Rule.",
         modalImportTitle: "Импорт файлов Tradovate (Performance.csv)",
         dropText: "Перетащите файл Performance.csv сюда или нажмите для выбора",
         dropSub: "Поддерживаются стандартные CSV-отчеты Tradovate",
@@ -584,7 +584,7 @@ const translations = {
         btnCancel: "Отмена",
         btnApply: "Применить к трекеру",
         statusPassed: "Выполнено",
-        statusViolation: "Превышение 50%",
+        statusViolation: "Превышение 30%",
         statusWaiting: "Ожидание",
         badgePassed: "Выполнено",
         badgeViolation: "Превышение",
@@ -592,12 +592,12 @@ const translations = {
         confirmReset: "Вы уверены, что хотите сбросить всю историю торгов?",
         alertNotEnoughDays: "Вам необходимо минимум 5 торговых дней с прибылью не менее $50 для первого вывода.",
         alertSafetyNetNotReached: "Баланс аккаунта должен достичь $52,600 (Safety Net), чтобы запросить вывод.",
-        alertConsistencyFailed: "Ваш лучший торговый день превышает 50% общей прибыли. Заработайте еще в другие дни.",
+        alertConsistencyFailed: "Ваш лучший торговый день превышает 30% общей прибыли. Заработайте еще в другие дни.",
         alertNoWallet: "Пожалуйста, укажите реквизиты кошелька или Rise.",
         alertSuccessPayout: (amt, method, wallet) => `Запрос на выплату $${amt} через ${method} успешно отправлен в Apex!\nРеквизиты: ${wallet}`,
-        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Ваш лучший день ($${best}) превышает 50%. Нужно заработать еще <span class="text-white font-bold">$${needed}</span> в другие дни для соблюдения консистентности.`,
+        warningMsg: (best, needed) => `<i class="fa-solid fa-triangle-exclamation text-amber-400 mr-1"></i> Ваш лучший день ($${best}) превышает 30%. Нужно заработать еще <span class="text-white font-bold">$${needed}</span> в другие дни для соблюдения консистентности (Лучший день ÷ 0.3).`,
         totalDaysText: (count) => `Всего дней: ${count}`,
-        targetText: (perc) => `Цель: ${perc}% / 50.0%`
+        targetText: (perc) => `Цель: ${perc}% / 30.0%`
     }
 };
 
@@ -901,12 +901,12 @@ function calculateRiskPlanner() {
     let distanceToBreakEven = Math.max(0, 50000 - currentBalance);
     document.getElementById('planBreakEven').textContent = distanceToBreakEven === 0 ? "$0.00" : `+$${distanceToBreakEven.toFixed(2)}`;
 
-    // Dynamic Guidance Note Update
+    // Dynamic Guidance Note Update (Using 30% Consistency Rule formula: Best Day / 0.3)
     const adviceEl = document.getElementById('dynamicAdviceText');
     if (currentLang === 'en') {
-        adviceEl.innerHTML = `<strong>Smart Guidance:</strong> With your custom daily loss limit of <strong>$${lossLimitInput.toFixed(2)}</strong>, targeting <strong>+$${minTarget.toFixed(0)} to +$${maxTarget.toFixed(0)}</strong> per winning session establishes a healthy 1:1+ Risk-to-Reward ratio. Your current buffer of $${currentBuffer.toFixed(2)} tolerates ~<strong>${bufferDays} consecutive full loss days</strong>. Reaching Safety Net ($52,600) will take approximately <strong>~${estDays} winning sessions</strong>.`;
+        adviceEl.innerHTML = `<strong>Smart Guidance:</strong> With your custom daily loss limit of <strong>$${lossLimitInput.toFixed(2)}</strong>, targeting <strong>+$${minTarget.toFixed(0)} to +$${maxTarget.toFixed(0)}</strong> per winning session establishes a healthy 1:1+ Risk-to-Reward ratio. Reaching Safety Net ($52,600) aligns smoothly with Apex 30% consistency rules (Minimum total profit required = Best Day ÷ 0.3).`;
     } else {
-        adviceEl.innerHTML = `<strong>Умный совет:</strong> При вашем дневном лимите убытка <strong>$${lossLimitInput.toFixed(2)}</strong>, целевой профит <strong>+$${minTarget.toFixed(0)} ... +$${maxTarget.toFixed(0)}</strong> даёт здоровое соотношение Risk/Reward 1:1+. Ваш текущий запас ($${currentBuffer.toFixed(2)}) выдержит ~<strong>${bufferDays} полных убыточных дней подряд</strong>. До уровня Safety Net ($52,600) потребуется примерно <strong>~${estDays} прибыльных сессий</strong>.`;
+        adviceEl.innerHTML = `<strong>Умный совет:</strong> При вашем дневном лимите убытка <strong>$${lossLimitInput.toFixed(2)}</strong>, целевой профит <strong>+$${minTarget.toFixed(0)} ... +$${maxTarget.toFixed(0)}</strong> даёт здоровое соотношение Risk/Reward 1:1+. До уровня Safety Net ($52,600) потребуется примерно <strong>~${estDays} прибыльных сессий</strong> согласно правилу 30% Consistency (Мин. общая прибыль = Лучший день ÷ 0.3).`;
     }
 }
 
@@ -989,7 +989,7 @@ function renderDashboard() {
 
     document.getElementById('statTrailingThreshold').textContent = `$${trailingThreshold.toLocaleString('en-US', {minimumFractionDigits: 2})}`;
 
-    // 50% Consistency Calculation
+    // 30% Consistency Calculation
     let consistencyPercentage = netProfit > 0 ? (bestDay / netProfit) * 100 : 0;
     if (netProfit <= 0) consistencyPercentage = 0;
 
@@ -999,7 +999,7 @@ function renderDashboard() {
     document.getElementById('consTargetText').textContent = t.targetText(consistencyPercentage.toFixed(1));
 
     const progressBar = document.getElementById('consProgressBar');
-    const progressWidth = Math.min(consistencyPercentage * 2, 100);
+    const progressWidth = Math.min((consistencyPercentage / 30.0) * 100, 100);
     progressBar.style.width = `${progressWidth}%`;
 
     const badge = document.getElementById('consistencyBadge');
@@ -1013,7 +1013,7 @@ function renderDashboard() {
         statusText.className = "text-2xl font-bold text-slate-300";
         progressBar.className = "bg-slate-600 h-full transition-all duration-500";
         warningMsg.classList.add('hidden');
-    } else if (consistencyPercentage <= 50.0) {
+    } else if (consistencyPercentage <= 30.0) {
         badge.className = "px-2.5 py-1 rounded-full text-xs font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20";
         badge.textContent = t.badgePassed;
         statusText.textContent = t.statusPassed;
@@ -1027,7 +1027,7 @@ function renderDashboard() {
         statusText.className = "text-2xl font-bold text-amber-400";
         progressBar.className = "bg-amber-500 h-full transition-all duration-500";
 
-        let requiredTotal = bestDay / 0.50;
+        let requiredTotal = bestDay / 0.30;
         let neededMore = requiredTotal - netProfit;
         warningMsg.classList.remove('hidden');
         warningMsg.innerHTML = t.warningMsg(bestDay.toFixed(2), neededMore.toFixed(2));
@@ -1140,7 +1140,7 @@ function requestPayout() {
         alert(t.alertSafetyNetNotReached);
         return;
     }
-    if (consistencyPercentage > 50.0) {
+    if (consistencyPercentage > 30.0) {
         alert(t.alertConsistencyFailed);
         return;
     }
